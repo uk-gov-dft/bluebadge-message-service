@@ -1,0 +1,208 @@
+{
+  "spec": {
+    "swagger" : "2.0",
+    "info" : {
+      "title" : "MessageService API",
+      "description" : "Manage messages",
+      "version" : "1.0.0"
+    },
+    "schemes" : [ "https", "http" ],
+    "produces" : [ "application/json" ],
+    "consumes" : [ "application/json" ],
+    "paths" : {
+      "/messages" : {
+        "post" : {
+          "summary" : "Sends an email to a user",
+          "description" : "Sends an email to the specified user",
+          "tags" : [ "Messages" ],
+          "parameters" : [ {
+            "name" : "userId",
+            "in" : "body",
+            "description" : "The user that needs an email link sending.",
+            "schema" : {
+              "$ref" : "#/definitions/UserId"
+            }
+          } ],
+          "responses" : {
+            "200" : {
+              "description" : "Success - A password email link has been created and sent."
+            },
+            "400" : {
+              "description" : "Bad request - user id empty or not integer",
+              "schema" : {
+                "$ref" : "#/definitions/CommonResponse"
+              }
+            },
+            "404" : {
+              "description" : "The specified user couldn't be found"
+            }
+          }
+        }
+      },
+      "/messages/{guid}" : {
+        "delete" : {
+          "summary" : "Removes an email link",
+          "description" : "Removes an email link specified by the message GUI",
+          "tags" : [ "Messages" ],
+          "parameters" : [ {
+            "in" : "path",
+            "name" : "guid",
+            "description" : "GUID of email link that will be removed, e.g. e61ae7be-3d2f-4f32-9aab-adc915b6b58c",
+            "type" : "string",
+            "required" : true
+          } ],
+          "responses" : {
+            "200" : {
+              "description" : "Success - The email link has been removed"
+            },
+            "404" : {
+              "description" : "Not Found - The guid specified cannot be found"
+            }
+          }
+        }
+      },
+      "/messages/{guid}/user" : {
+        "get" : {
+          "summary" : "Gets a user",
+          "description" : "Gets a user for the specified message guid",
+          "tags" : [ "Messages" ],
+          "parameters" : [ {
+            "in" : "path",
+            "name" : "guid",
+            "type" : "string",
+            "required" : true,
+            "description" : "Guid of the User we want to retrieve eg. e61ae7be-3d2f-4f32-9aab-adc915b6b58c"
+          } ],
+          "responses" : {
+            "200" : {
+              "description" : "OK",
+              "schema" : {
+                "$ref" : "#/definitions/UserResponse"
+              }
+            },
+            "404" : {
+              "description" : "Not Found - An email link couldn't be found for the specified GUID"
+            }
+          }
+        }
+      }
+    },
+    "definitions" : {
+      "UserId" : {
+        "type" : "object",
+        "required" : [ "userId" ],
+        "properties" : {
+          "userId" : {
+            "type" : "integer",
+            "description" : "Unique identifier representing a specific user.",
+            "example" : 45
+          }
+        }
+      },
+      "User" : {
+        "type" : "object",
+        "required" : [ "userId" ],
+        "properties" : {
+          "userId" : {
+            "type" : "integer",
+            "example" : 45
+          },
+          "guid" : {
+            "type" : "string",
+            "example" : "e61ae7be-3d2f-4f32-9aab-adc915b6b58c"
+          }
+        }
+      },
+      "UserResponse" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/definitions/CommonResponse"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "data" : {
+              "$ref" : "#/definitions/User"
+            }
+          }
+        } ]
+      },
+      "CommonResponse" : {
+        "type" : "object",
+        "properties" : {
+          "apiVersion" : {
+            "type" : "string"
+          },
+          "context" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "method" : {
+            "type" : "string"
+          },
+          "error" : {
+            "$ref" : "#/definitions/Error"
+          }
+        }
+      },
+      "Error" : {
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "integer"
+          },
+          "message" : {
+            "type" : "string"
+          },
+          "errors" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "properties" : {
+                "field" : {
+                  "type" : "string"
+                },
+                "reason" : {
+                  "type" : "string"
+                },
+                "message" : {
+                  "type" : "string"
+                },
+                "location" : {
+                  "type" : "string"
+                },
+                "locationType" : {
+                  "type" : "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "host" : "virtserver.swaggerhub.com",
+    "basePath" : "/uk-gov-dft/MessageService/1.0.0"
+  },
+  "options": {
+    "java8" : true,
+    "sortParamsByRequiredFlag" : false,
+    "modelPackage" : "uk.gov.dft.bluebadge.model.message",
+    "apiPackage" : "uk.gov.dft.bluebadge.service.message.controller",
+    "groupId" : "uk.gov.dft.bluebadge",
+    "artifactId" : "message-service",
+    "artifactVersion" : "1.0.0-SNAPSHOT",
+    "sourceFolder" : "generated/src/main/java",
+    "dateLibrary" : "java8-localdatetime",
+    "delegatePattern" : false,
+    "title" : "process-sample",
+    "configPackage" : "uk.gov.dft.bluebadge.service.message.config.swagger",
+    "basePackage" : "uk.gov.dft.bluebadge.dontneed.message.application",
+    "useBeanValidation" : false,
+    "performBeanValidation" : false,
+    "useOptional" : false,
+    "useTags" : true,
+    "hideGenerationTimestamp" : true,
+    "appVersion" : "1.0"
+  }
+}

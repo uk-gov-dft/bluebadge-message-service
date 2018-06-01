@@ -1,0 +1,20 @@
+
+logging:
+  level:
+    root: INFO
+    sample.mybatis.mapper: WARN
+    uk.gov.dft.bluebadge.service: DEBUG
+
+
+spring:
+  jackson:
+    date-format: uk.gov.dft.bluebadge.service.message.RFC3339DateFormat
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: 8480
+  servlet:
+    context-path: /uk-gov-dft/message-service/1.0.0
+
+springfox.documentation.swagger.v2.path: /api-docs
