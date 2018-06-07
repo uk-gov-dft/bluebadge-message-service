@@ -26,7 +26,6 @@ hs_err_pid*
 .idea
 .project
 .idea
-.gradle
 migrations/drivers
 *.iml
 *.sublime*
@@ -41,4 +40,5 @@ gradlew.bat
 gradlew
 out
 /env.mk
-
+.gradle
+!settings.gradle
