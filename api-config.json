@@ -10,14 +10,16 @@
     "produces" : [ "application/json" ],
     "consumes" : [ "application/json" ],
     "paths" : {
-      "/messages" : {
+      "/messages/send-email" : {
         "post" : {
+          "operationId" : "sendEmail",
           "summary" : "Sends an email to a user",
           "description" : "Sends an email to the specified user",
           "tags" : [ "Messages" ],
           "parameters" : [ {
             "name" : "userId",
             "in" : "body",
+            "required" : true,
             "description" : "The user that needs an email link sending.",
             "schema" : {
               "$ref" : "#/definitions/UserId"
@@ -28,10 +30,7 @@
               "description" : "Success - A password email link has been created and sent."
             },
             "400" : {
-              "description" : "Bad request - user id empty or not integer",
-              "schema" : {
-                "$ref" : "#/definitions/CommonResponse"
-              }
+              "description" : "Bad request - user id empty or not integer"
             },
             "404" : {
               "description" : "The specified user couldn't be found"
@@ -41,6 +40,7 @@
       },
       "/messages/{guid}" : {
         "delete" : {
+          "operationId" : "messagesGuidDelete",
           "summary" : "Removes an email link",
           "description" : "Removes an email link specified by the message GUI",
           "tags" : [ "Messages" ],
@@ -63,6 +63,7 @@
       },
       "/messages/{guid}/user" : {
         "get" : {
+          "operationId" : "messagesGuidUserGet",
           "summary" : "Gets a user",
           "description" : "Gets a user for the specified message guid",
           "tags" : [ "Messages" ],

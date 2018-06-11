@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import uk.gov.dft.bluebadge.model.message.CommonResponse;
 import uk.gov.dft.bluebadge.model.message.UserId;
 import uk.gov.dft.bluebadge.model.message.UserResponse;
 
@@ -127,7 +126,7 @@ public interface MessagesApi {
 
   @ApiOperation(
     value = "Sends an email to a user",
-    nickname = "messagesPost",
+    nickname = "sendEmail",
     notes = "Sends an email to the specified user",
     tags = {
       "Messages",
@@ -139,22 +138,20 @@ public interface MessagesApi {
         code = 200,
         message = "Success - A password email link has been created and sent."
       ),
-      @ApiResponse(
-        code = 400,
-        message = "Bad request - user id empty or not integer",
-        response = CommonResponse.class
-      ),
+      @ApiResponse(code = 400, message = "Bad request - user id empty or not integer"),
       @ApiResponse(code = 404, message = "The specified user couldn't be found")
     }
   )
   @RequestMapping(
-    value = "/messages",
+    value = "/messages/send-email",
     produces = {"application/json"},
     consumes = {"application/json"},
     method = RequestMethod.POST
   )
-  default ResponseEntity<Void> messagesPost(
-      @ApiParam(value = "The user that needs an email link sending.") @Valid @RequestBody
+  default ResponseEntity<Void> sendEmail(
+      @ApiParam(value = "The user that needs an email link sending.", required = true)
+          @Valid
+          @RequestBody
           UserId userId) {
     if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
     } else {

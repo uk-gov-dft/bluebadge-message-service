@@ -2,10 +2,6 @@ package uk.gov.dft.bluebadge.service.message;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
-import java.util.Optional;
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +15,13 @@ import uk.gov.dft.bluebadge.model.message.UserId;
 import uk.gov.dft.bluebadge.model.message.UserResponse;
 import uk.gov.dft.bluebadge.service.message.controller.MessagesApi;
 import uk.gov.dft.bluebadge.service.message.converter.UserConverter;
+import uk.gov.dft.bluebadge.service.message.repository.domain.PasswordResetEntity;
 import uk.gov.dft.bluebadge.service.message.service.MessageService;
-import uk.gov.dft.bluebadge.service.message.service.domain.UserEntity;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.Optional;
 
 @Controller
 public class MessagesApiControllerImpl implements MessagesApi {
@@ -56,15 +57,11 @@ public class MessagesApiControllerImpl implements MessagesApi {
    * @return The created user with id populated.
    */
   @Override
-  public ResponseEntity<Void> messagesPost(
-      @ApiParam(value = "") @Valid @RequestBody UserId userId) {
-    UserResponse userResponse = new UserResponse();
+  public ResponseEntity<Void> sendEmail(@ApiParam(value = "") @Valid @RequestBody UserId userId) {
 
-    UserEntity userEntity = new UserEntity();
-    userEntity.setUserId(userId.getUserId());
-    if (service.sendEmail(userEntity) == 0) {
-      throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
-    }
+    PasswordResetEntity entity = new PasswordResetEntity();
+    entity.setUserId(userId.getUserId());
+    service.sendPasswordResetEmail(entity);
     return ResponseEntity.status(HttpStatus.OK).build();
   }
 

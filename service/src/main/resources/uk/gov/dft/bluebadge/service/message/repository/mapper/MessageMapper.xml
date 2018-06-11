@@ -1,0 +1,12 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="uk.gov.dft.bluebadge.service.message.repository.mapper.MessageMapper">
+
+    <insert id="createPasswordReset" parameterType="PasswordResetEntity">
+        INSERT INTO email_link
+        (user_id, uuid)
+        VALUES (#{userId}, #{uuid,javaType=java.util.UUID,jdbcType=OTHER,typeHandler=uk.gov.dft.bluebadge.service.message.repository.UuidTypeHandler})
+    </insert>
+
+</mapper>
