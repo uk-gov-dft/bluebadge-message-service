@@ -15,13 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import uk.gov.dft.bluebadge.model.message.CommonResponse;
-import uk.gov.dft.bluebadge.model.message.UserId;
-import uk.gov.dft.bluebadge.model.message.UserResponse;
+import uk.gov.dft.bluebadge.model.message.User;
+import uk.gov.dft.bluebadge.model.message.UuidResponse;
 
 @Api(value = "Messages", description = "the Messages API")
 public interface MessagesApi {
@@ -41,94 +39,10 @@ public interface MessagesApi {
   }
 
   @ApiOperation(
-    value = "Removes an email link",
-    nickname = "messagesGuidDelete",
-    notes = "Removes an email link specified by the message GUI",
-    tags = {
-      "Messages",
-    }
-  )
-  @ApiResponses(
-    value = {
-      @ApiResponse(code = 200, message = "Success - The email link has been removed"),
-      @ApiResponse(code = 404, message = "Not Found - The guid specified cannot be found")
-    }
-  )
-  @RequestMapping(
-    value = "/messages/{guid}",
-    produces = {"application/json"},
-    consumes = {"application/json"},
-    method = RequestMethod.DELETE
-  )
-  default ResponseEntity<Void> messagesGuidDelete(
-      @ApiParam(
-            value =
-                "GUID of email link that will be removed, e.g. e61ae7be-3d2f-4f32-9aab-adc915b6b58c",
-            required = true
-          )
-          @PathVariable("guid")
-          String guid) {
-    if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-    } else {
-      log.warn(
-          "ObjectMapper or HttpServletRequest not configured in default MessagesApi interface so no example is generated");
-    }
-    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-  }
-
-  @ApiOperation(
-    value = "Gets a user",
-    nickname = "messagesGuidUserGet",
-    notes = "Gets a user for the specified message guid",
-    response = UserResponse.class,
-    tags = {
-      "Messages",
-    }
-  )
-  @ApiResponses(
-    value = {
-      @ApiResponse(code = 200, message = "OK", response = UserResponse.class),
-      @ApiResponse(
-        code = 404,
-        message = "Not Found - An email link couldn't be found for the specified GUID"
-      )
-    }
-  )
-  @RequestMapping(
-    value = "/messages/{guid}/user",
-    produces = {"application/json"},
-    consumes = {"application/json"},
-    method = RequestMethod.GET
-  )
-  default ResponseEntity<UserResponse> messagesGuidUserGet(
-      @ApiParam(
-            value = "Guid of the User we want to retrieve eg. e61ae7be-3d2f-4f32-9aab-adc915b6b58c",
-            required = true
-          )
-          @PathVariable("guid")
-          String guid) {
-    if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
-      if (getAcceptHeader().get().contains("application/json")) {
-        try {
-          return new ResponseEntity<>(
-              getObjectMapper().get().readValue("\"\"", UserResponse.class),
-              HttpStatus.NOT_IMPLEMENTED);
-        } catch (IOException e) {
-          log.error("Couldn't serialize response for content type application/json", e);
-          return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-      }
-    } else {
-      log.warn(
-          "ObjectMapper or HttpServletRequest not configured in default MessagesApi interface so no example is generated");
-    }
-    return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
-  }
-
-  @ApiOperation(
     value = "Sends an email to a user",
-    nickname = "messagesPost",
+    nickname = "sendPasswordChangeEmail",
     notes = "Sends an email to the specified user",
+    response = UuidResponse.class,
     tags = {
       "Messages",
     }
@@ -137,26 +51,34 @@ public interface MessagesApi {
     value = {
       @ApiResponse(
         code = 200,
-        message = "Success - A password email link has been created and sent."
+        message = "Success - A password email link has been created and sent.",
+        response = UuidResponse.class
       ),
-      @ApiResponse(
-        code = 400,
-        message = "Bad request - user id empty or not integer",
-        response = CommonResponse.class
-      ),
-      @ApiResponse(code = 404, message = "The specified user couldn't be found")
+      @ApiResponse(code = 400, message = "Bad request")
     }
   )
   @RequestMapping(
-    value = "/messages",
+    value = "/messages/send***REMOVED***-email",
     produces = {"application/json"},
     consumes = {"application/json"},
     method = RequestMethod.POST
   )
-  default ResponseEntity<Void> messagesPost(
-      @ApiParam(value = "The user that needs an email link sending.") @Valid @RequestBody
-          UserId userId) {
+  default ResponseEntity<UuidResponse> sendPasswordChangeEmail(
+      @ApiParam(value = "The user that needs an email link sending.", required = true)
+          @Valid
+          @RequestBody
+          User user) {
     if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
+      if (getAcceptHeader().get().contains("application/json")) {
+        try {
+          return new ResponseEntity<>(
+              getObjectMapper().get().readValue("\"\"", UuidResponse.class),
+              HttpStatus.NOT_IMPLEMENTED);
+        } catch (IOException e) {
+          log.error("Couldn't serialize response for content type application/json", e);
+          return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+      }
     } else {
       log.warn(
           "ObjectMapper or HttpServletRequest not configured in default MessagesApi interface so no example is generated");

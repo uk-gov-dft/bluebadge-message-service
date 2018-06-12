@@ -3,30 +3,24 @@ package uk.gov.dft.bluebadge.service.message;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.ApiParam;
 import java.util.Optional;
+import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.HttpClientErrorException;
 import uk.gov.dft.bluebadge.model.message.User;
-import uk.gov.dft.bluebadge.model.message.UserId;
-import uk.gov.dft.bluebadge.model.message.UserResponse;
+import uk.gov.dft.bluebadge.model.message.UuidResponse;
+import uk.gov.dft.bluebadge.model.message.UuidResponseData;
 import uk.gov.dft.bluebadge.service.message.controller.MessagesApi;
-import uk.gov.dft.bluebadge.service.message.converter.UserConverter;
+import uk.gov.dft.bluebadge.service.message.repository.domain.PasswordResetEntity;
 import uk.gov.dft.bluebadge.service.message.service.MessageService;
-import uk.gov.dft.bluebadge.service.message.service.domain.UserEntity;
 
 @Controller
 public class MessagesApiControllerImpl implements MessagesApi {
 
   private MessageService service;
-  private UserConverter userConverter = new UserConverter();
   private ObjectMapper objectMapper;
   private HttpServletRequest request;
 
@@ -52,44 +46,23 @@ public class MessagesApiControllerImpl implements MessagesApi {
   /**
    * Sends a message.
    *
-   * @param userId User to send the message to.
+   * @param user User to send the message to.
    * @return The created user with id populated.
    */
   @Override
-  public ResponseEntity<Void> messagesPost(
-      @ApiParam(value = "") @Valid @RequestBody UserId userId) {
-    UserResponse userResponse = new UserResponse();
-
-    UserEntity userEntity = new UserEntity();
-    userEntity.setUserId(userId.getUserId());
-    if (service.sendEmail(userEntity) == 0) {
-      throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
-    }
-    return ResponseEntity.status(HttpStatus.OK).build();
-  }
-
-  @Override
-  public ResponseEntity<Void> messagesGuidDelete(
-      @ApiParam(value = "GUID of the user we want to remove", required = true) @PathVariable("guid")
-          String guid) {
-    if (service.removeEmailLink(guid) == 0) {
-      throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
-    }
-    return new ResponseEntity<>(HttpStatus.OK);
-  }
-
-  @Override
-  public ResponseEntity<UserResponse> messagesGuidUserGet(
-      @NotNull
-          @ApiParam(value = "guid of the user we want to retrieve", required = true)
+  public ResponseEntity<UuidResponse> sendPasswordChangeEmail(
+      @ApiParam(value = "The user that needs an email link sending.", required = true)
           @Valid
-          @RequestParam(value = "guid", required = true)
-          String guid) {
-    User user = service.getUserByGUID(guid);
-    if (user == null) {
-      throw new HttpClientErrorException(HttpStatus.NOT_FOUND);
-    }
-    UserResponse userResponse = new UserResponse().data(user);
-    return ResponseEntity.ok(userResponse);
+          @RequestBody
+          User user) {
+
+    PasswordResetEntity entity = new PasswordResetEntity();
+    entity.setUserId(user.getId());
+    UUID createdUuid = service.sendPasswordResetEmail(entity);
+    UuidResponse response = new UuidResponse();
+    UuidResponseData data = new UuidResponseData();
+    data.setUuid(createdUuid.toString());
+    response.setData(data);
+    return ResponseEntity.ok(response);
   }
 }
