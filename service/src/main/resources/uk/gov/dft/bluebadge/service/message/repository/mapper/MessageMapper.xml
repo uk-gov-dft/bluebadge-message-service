@@ -4,7 +4,7 @@
 <mapper namespace="uk.gov.dft.bluebadge.service.message.repository.mapper.MessageMapper">
 
     <insert id="createPasswordReset" parameterType="PasswordResetEntity">
-        INSERT INTO email_link
+        INSERT INTO password_reset_email
         (user_id, uuid)
         VALUES (#{userId}, #{uuid,javaType=java.util.UUID,jdbcType=OTHER,typeHandler=uk.gov.dft.bluebadge.service.message.repository.UuidTypeHandler})
     </insert>

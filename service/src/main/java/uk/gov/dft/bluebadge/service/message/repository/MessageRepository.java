@@ -7,13 +7,13 @@ import uk.gov.dft.bluebadge.service.message.repository.domain.PasswordResetEntit
 @Component
 public class MessageRepository {
 
-    private SqlSession session;
+  private SqlSession session;
 
-    public MessageRepository(SqlSession session) {
-        this.session = session;
-    }
+  public MessageRepository(SqlSession session) {
+    this.session = session;
+  }
 
-    public int createPasswordReset(PasswordResetEntity passwordResetEntity){
-        return session.insert("createPasswordReset", passwordResetEntity);
-    }
+  public int createPasswordReset(PasswordResetEntity passwordResetEntity) {
+    return session.insert("createPasswordReset", passwordResetEntity);
+  }
 }

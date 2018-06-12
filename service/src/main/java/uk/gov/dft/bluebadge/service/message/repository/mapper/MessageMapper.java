@@ -6,5 +6,5 @@ import uk.gov.dft.bluebadge.service.message.repository.domain.PasswordResetEntit
 @Mapper
 @SuppressWarnings("unused")
 public interface MessageMapper {
-    void createPasswordReset(PasswordResetEntity passwordResetEntity);
+  void createPasswordReset(PasswordResetEntity passwordResetEntity);
 }
