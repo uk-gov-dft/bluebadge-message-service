@@ -3,4 +3,4 @@
 CREATE USER developer ***REMOVED***;
 CREATE DATABASE bb_dev OWNER developer;
 \connect bb_dev
-CREATE SCHEMA usermanagement AUTHORIZATION developer;
+CREATE SCHEMA message AUTHORIZATION developer;
