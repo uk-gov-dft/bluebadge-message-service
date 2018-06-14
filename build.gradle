@@ -1,18 +1,78 @@
 import groovy.json.JsonSlurper
 
-plugins {
-    id "com.jfrog.artifactory" version "4.5.4"
-}
+buildscript {
 
-
-allprojects {
-    apply plugin: 'java'
-    group = 'uk.gov.dft.bluebadge'
-    version = '0.0.1-SNAPSHOT'
-
-    sourceCompatibility = 1.8
     repositories {
         mavenCentral()
+        jcenter()
+        maven {
+            url 'https://artifactory.does.not.exist/artifactory/gradle-release'
+            credentials {
+                username = "rob"
+                 ***REMOVED***
+            }
+        }
+    }
+
+    dependencies {
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
+    }
+}
+
+//apply plugin: 'com.jfrog.artifactory'
+
+allprojects {
+
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
+    apply plugin: 'com.jfrog.artifactory'
+
+    group = 'uk.gov.dft.bluebadge'
+    version = rootProject.file('VERSION').text.trim()
+    sourceCompatibility = 1.8
+
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven {
+            url 'https://artifactory.does.not.exist/artifactory/gradle-release-dev'
+            credentials {
+                username = "rob"
+                 ***REMOVED***
+            }
+        }
+    }
+}
+
+artifactory {
+    contextUrl = "https://artifactory.does.not.exist/artifactory"
+    //The base Artifactory URL if not overridden by the publisher/resolver
+    publish {
+        repository {
+            repoKey = 'gradle-dev-local'
+            username = "rob"
+             ***REMOVED***
+            maven = true
+        }
+
+        publishArtifacts = true
+        publishPom = true
+        defaults {
+            publications('project_model', 'project_client', 'project_service')
+            publishArtifacts = true
+            publishPom = true
+        }
+    }
+
+    resolve {
+        repository {
+            repoKey = 'gradle-release'
+            username = "rob"
+             ***REMOVED***
+            maven = true
+
+        }
     }
 }
 
@@ -58,14 +118,14 @@ task unzipGenerated(type: Copy) {
     into outputDir
 }
 
-task generateModel(dependsOn: 'unzipGenerated', type: Sync){
+task generateModel(dependsOn: 'unzipGenerated', type: Sync) {
     group = "GenerateAPI"
     from "${buildDir}/unpacked/spring-server/generated/src/main/java/uk/gov/dft/bluebadge/model/message"
     include "**/*.java"
     into "model/src/generated/java/uk/gov/dft/bluebadge/model/message"
 }
 
-task generateService(dependsOn: 'unzipGenerated', type: Sync){
+task generateService(dependsOn: 'unzipGenerated', type: Sync) {
     group = "GenerateAPI"
     from "${buildDir}/unpacked/spring-server/generated/src/main/java/uk/gov/dft/bluebadge/service/message"
     exclude '**/Swagger2SpringBoot.java'

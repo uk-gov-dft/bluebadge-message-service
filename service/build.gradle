@@ -42,6 +42,12 @@ sourceSets {
     }
 }
 
+tasks.withType(FindBugs) {
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
+}
 tasks.withType(Pmd) {
     reports {
         xml.enabled = false
@@ -74,3 +80,12 @@ bootRun {
 }
 archivesBaseName = "message-service"
 compileJava.dependsOn 'googleJavaFormat'
+
+publishing {
+    publications {
+        project_service(MavenPublication) {
+            from components.java
+            artifactId "${archivesBaseName}"
+        }
+    }
+}
