@@ -1,11 +1,11 @@
 ### API Acceptance tests
 
-#### Start the message service
+#### Start the usermanagement service
 
-First you need to start the message service by executing following commands
+First you need to start the usermanagement service by executing following commands
 
 ```
-cd badgemanagement-service
+cd usermanagement-service
 git pull
 git checkout whateverbranch
 cd model

@@ -16,7 +16,15 @@ management:
       exposure:
         include: '*'
 
+mybatis:
+  type-aliases-package: uk.gov.dft.bluebadge.service.message.repository.domain
+  type-handlers-package: uk.gov.dft.bluebadge.service.message.repository
+
 spring:
+  datasource:
+     ***REMOVED***
+    username: developer
+    url: jdbc:postgresql://127.0.0.1:5432/bb_dev?currentSchema=message
   jackson:
     date-format: uk.gov.dft.bluebadge.service.message.RFC3339DateFormat
     serialization:
