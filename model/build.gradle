@@ -26,3 +26,12 @@ sourceSets {
 }
 archivesBaseName = "message-service-model"
 compileJava.dependsOn 'googleJavaFormat'
+
+publishing {
+    publications {
+        project_model(MavenPublication) {
+            from components.java
+            artifactId "${archivesBaseName}"
+        }
+    }
+}
