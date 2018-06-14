@@ -11,6 +11,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     // Turn off security. Needed until resource server config is applied
-    http.antMatcher("/**").authorizeRequests().anyRequest().permitAll();
+    http.csrf().disable().antMatcher("/**").authorizeRequests().anyRequest().permitAll();
   }
 }

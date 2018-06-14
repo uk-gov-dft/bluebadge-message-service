@@ -4,6 +4,7 @@ logging:
     root: INFO
     sample.mybatis.mapper: WARN
     uk.gov.dft.bluebadge.service: DEBUG
+    org.springframework.security: DEBUG
 
 management:
   server:
