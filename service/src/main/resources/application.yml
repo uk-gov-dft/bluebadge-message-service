@@ -4,6 +4,18 @@ logging:
     root: INFO
     sample.mybatis.mapper: WARN
     uk.gov.dft.bluebadge.service: DEBUG
+    org.springframework.security: DEBUG
+
+management:
+  server:
+    port: 8481
+    address: localhost
+    servlet:
+      context-path: /manage
+  endpoints:
+    web:
+      exposure:
+        include: '*'
 
 mybatis:
   type-aliases-package: uk.gov.dft.bluebadge.service.message.repository.domain
