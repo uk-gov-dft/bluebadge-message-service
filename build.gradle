@@ -45,18 +45,6 @@ allprojects {
     }
 }
 
-//subprojects {
-//    repositories {
-//        maven {
-//            url 'https://artifactory.does.not.exist/artifactory/gradle-release-dev'
-//            credentials {
-//                username = "rob"
-//                 ***REMOVED***
-//            }
-//        }
-//    }
-//}
-//artifactoryPublish.skip=true
 artifactory {
     contextUrl = "https://artifactory.does.not.exist/artifactory"
     //The base Artifactory URL if not overridden by the publisher/resolver
