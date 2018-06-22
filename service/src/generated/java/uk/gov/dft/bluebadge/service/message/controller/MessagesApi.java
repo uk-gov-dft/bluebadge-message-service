@@ -18,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import uk.gov.dft.bluebadge.model.message.User;
+import uk.gov.dft.bluebadge.model.message.PasswordResetRequest;
 import uk.gov.dft.bluebadge.model.message.UuidResponse;
 
 @Api(value = "Messages", description = "the Messages API")
@@ -67,7 +67,7 @@ public interface MessagesApi {
       @ApiParam(value = "The user that needs an email link sending.", required = true)
           @Valid
           @RequestBody
-          User user) {
+          PasswordResetRequest passwordReset) {
     if (getObjectMapper().isPresent() && getAcceptHeader().isPresent()) {
       if (getAcceptHeader().get().contains("application/json")) {
         try {

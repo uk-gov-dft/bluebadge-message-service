@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
-import uk.gov.dft.bluebadge.model.message.User;
+import uk.gov.dft.bluebadge.model.message.PasswordResetRequest;
 import uk.gov.dft.bluebadge.model.message.UuidResponse;
 import uk.gov.dft.bluebadge.model.message.UuidResponseData;
 import uk.gov.dft.bluebadge.service.message.controller.MessagesApi;
@@ -46,7 +46,7 @@ public class MessagesApiControllerImpl implements MessagesApi {
   /**
    * Sends a message.
    *
-   * @param user User to send the message to.
+   * @param passwordReset User to send the message to.
    * @return The created user with id populated.
    */
   @Override
@@ -54,10 +54,10 @@ public class MessagesApiControllerImpl implements MessagesApi {
       @ApiParam(value = "The user that needs an email link sending.", required = true)
           @Valid
           @RequestBody
-          User user) {
+          PasswordResetRequest passwordReset) {
 
     PasswordResetEntity entity = new PasswordResetEntity();
-    entity.setUserId(user.getId());
+    entity.setUserId(passwordReset.getUserId());
     UUID createdUuid = service.sendPasswordResetEmail(entity);
     UuidResponse response = new UuidResponse();
     UuidResponseData data = new UuidResponseData();

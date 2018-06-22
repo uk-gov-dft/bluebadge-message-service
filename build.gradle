@@ -64,7 +64,7 @@ artifactory {
         publishArtifacts = true
         publishPom = true
         defaults {
-            publications('project_model', 'project_client', 'project_service')
+            publications('project_model', 'project_service')
             publishArtifacts = true
             publishPom = true
         }
@@ -76,12 +76,6 @@ artifactory {
             maven = true
 
         }
-    }
-}
-
-project(':client') {
-    dependencies {
-        compile project(':model')
     }
 }
 
