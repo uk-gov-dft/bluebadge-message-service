@@ -2,6 +2,7 @@ package uk.gov.dft.bluebadge.service.message.service;
 
 import static org.mockito.Mockito.when;
 
+import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -9,8 +10,6 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.util.Assert;
 import uk.gov.dft.bluebadge.service.message.repository.MessageRepository;
 import uk.gov.dft.bluebadge.service.message.repository.domain.PasswordResetEntity;
-
-import java.util.UUID;
 
 public class MessageServiceTest {
 

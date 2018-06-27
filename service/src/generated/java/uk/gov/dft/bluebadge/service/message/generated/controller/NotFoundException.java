@@ -1,4 +1,4 @@
-package uk.gov.dft.bluebadge.service.message.controller;
+package uk.gov.dft.bluebadge.service.message.generated.controller;
 
 public class NotFoundException extends ApiException {
   private int code;

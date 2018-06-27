@@ -1,4 +1,4 @@
-package uk.gov.dft.bluebadge.service.message.config.swagger;
+package uk.gov.dft.bluebadge.service.message.generated.config.swagger;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

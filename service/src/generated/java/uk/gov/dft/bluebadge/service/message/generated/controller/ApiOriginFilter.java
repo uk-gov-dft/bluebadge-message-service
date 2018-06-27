@@ -1,4 +1,4 @@
-package uk.gov.dft.bluebadge.service.message.controller;
+package uk.gov.dft.bluebadge.service.message.generated.controller;
 
 import java.io.IOException;
 import javax.servlet.*;

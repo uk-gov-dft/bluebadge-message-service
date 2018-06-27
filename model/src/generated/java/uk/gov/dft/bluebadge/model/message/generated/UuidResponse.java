@@ -1,39 +1,36 @@
-package uk.gov.dft.bluebadge.model.message;
+package uk.gov.dft.bluebadge.model.message.generated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.Objects;
+import javax.validation.Valid;
 import javax.validation.constraints.*;
 import org.springframework.validation.annotation.Validated;
 
-/** UserId */
+/** UuidResponse */
 @Validated
-public class UserId {
-  @JsonProperty("userId")
-  private Integer userId = null;
+public class UuidResponse extends CommonResponse {
+  @JsonProperty("data")
+  private UuidResponseData data = null;
 
-  public UserId userId(Integer userId) {
-    this.userId = userId;
+  public UuidResponse data(UuidResponseData data) {
+    this.data = data;
     return this;
   }
 
   /**
-   * Unique identifier representing a specific user.
+   * Get data
    *
-   * @return userId
+   * @return data
    */
-  @ApiModelProperty(
-    example = "45",
-    required = true,
-    value = "Unique identifier representing a specific user."
-  )
-  @NotNull
-  public Integer getUserId() {
-    return userId;
+  @ApiModelProperty(value = "")
+  @Valid
+  public UuidResponseData getData() {
+    return data;
   }
 
-  public void setUserId(Integer userId) {
-    this.userId = userId;
+  public void setData(UuidResponseData data) {
+    this.data = data;
   }
 
   @Override
@@ -44,21 +41,21 @@ public class UserId {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    UserId userId = (UserId) o;
-    return Objects.equals(this.userId, userId.userId);
+    UuidResponse uuidResponse = (UuidResponse) o;
+    return Objects.equals(this.data, uuidResponse.data) && super.equals(o);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(userId);
+    return Objects.hash(data, super.hashCode());
   }
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class UserId {\n");
-
-    sb.append("    userId: ").append(toIndentedString(userId)).append("\n");
+    sb.append("class UuidResponse {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+    sb.append("    data: ").append(toIndentedString(data)).append("\n");
     sb.append("}");
     return sb.toString();
   }
