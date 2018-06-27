@@ -1,4 +1,4 @@
-package uk.gov.dft.bluebadge.service.message.config.swagger;
+package uk.gov.dft.bluebadge.service.message.generated.config.swagger;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +29,8 @@ public class SwaggerDocumentationConfig {
     return new Docket(DocumentationType.SWAGGER_2)
         .select()
         .apis(
-            RequestHandlerSelectors.basePackage("uk.gov.dft.bluebadge.service.message.controller"))
+            RequestHandlerSelectors.basePackage(
+                "uk.gov.dft.bluebadge.service.message.generated.controller"))
         .build()
         .directModelSubstitute(java.time.LocalDate.class, java.sql.Date.class)
         .directModelSubstitute(java.time.OffsetDateTime.class, java.util.Date.class)

@@ -10,17 +10,17 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableSwagger2
 @ComponentScan
-public class ServiceApplication implements CommandLineRunner {
+public class MessageServiceApplication implements CommandLineRunner {
 
   @Override
-  public void run(String... arg0) throws Exception {
+  public void run(String... arg0) {
     if (arg0.length > 0 && arg0[0].equals("exitcode")) {
       throw new ExitException();
     }
   }
 
-  public static void main(String[] args) throws Exception {
-    new SpringApplication(ServiceApplication.class).run(args);
+  public static void main(String[] args) {
+    new SpringApplication(MessageServiceApplication.class).run(args);
   }
 
   static class ExitException extends RuntimeException implements ExitCodeGenerator {

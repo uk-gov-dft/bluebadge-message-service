@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
-import uk.gov.dft.bluebadge.model.message.PasswordResetRequest;
-import uk.gov.dft.bluebadge.model.message.UuidResponse;
-import uk.gov.dft.bluebadge.model.message.UuidResponseData;
-import uk.gov.dft.bluebadge.service.message.controller.MessagesApi;
+import uk.gov.dft.bluebadge.model.message.generated.PasswordResetRequest;
+import uk.gov.dft.bluebadge.model.message.generated.UuidResponse;
+import uk.gov.dft.bluebadge.model.message.generated.UuidResponseData;
+import uk.gov.dft.bluebadge.service.message.generated.controller.MessagesApi;
 import uk.gov.dft.bluebadge.service.message.repository.domain.PasswordResetEntity;
 import uk.gov.dft.bluebadge.service.message.service.MessageService;
 
