@@ -19,7 +19,7 @@ public class MessageService {
   }
 
   public UUID sendPasswordResetEmail(PasswordResetEntity entity) {
-    log.debug("Creating password reset email for user {}", entity.getUuid());
+    log.debug("Creating password reset email for user: {}", entity.getUuid());
     entity.setUuid(UUID.randomUUID());
     repository.createPasswordReset(entity);
     return entity.getUuid();
