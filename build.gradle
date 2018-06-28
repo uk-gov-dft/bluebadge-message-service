@@ -15,8 +15,9 @@ buildscript {
     }
 }
 
-def getCurrentGitBranch() {
-    def gitBranch = "Unknown branch"
+def getVersion() {
+    def version = rootProject.file('VERSION').text.trim()
+    def versionSuffix = "Unknown"
     try {
         def workingDir = new File("${project.projectDir}")
         def result = 'git rev-parse --abbrev-ref HEAD'.execute(null, workingDir)
@@ -26,10 +27,16 @@ def getCurrentGitBranch() {
             if (gitBranch == 'develop') {
                 gitBranch = 'SNAPSHOT'
             }
+            if (gitBranch == 'master') {
+                versionSuffix = '' 
+            } else {
+                versionSuffix = '-' + gitBranch
+            }
+            
         }
     } catch (e) {
     }
-    return gitBranch
+    return version + versionSuffix
 }
 
 allprojects {
@@ -40,7 +47,7 @@ allprojects {
     apply plugin: 'com.jfrog.artifactory'
 
     group = 'uk.gov.dft.bluebadge'
-    version = rootProject.file('VERSION').text.trim() + '-' + getCurrentGitBranch()
+    version = getVersion()
     sourceCompatibility = 1.8
 
     repositories {
