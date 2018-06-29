@@ -15,7 +15,7 @@ buildscript {
     }
 }
 
-def getVersion() {
+def getTheVersion() {
     def version = rootProject.file('VERSION').text.trim()
     def versionSuffix = "Unknown"
     try {
@@ -23,7 +23,7 @@ def getVersion() {
         def result = 'git rev-parse --abbrev-ref HEAD'.execute(null, workingDir)
         result.waitFor()
         if (result.exitValue() == 0) {
-            gitBranch = result.text.trim().replaceAll('/','_')
+            def gitBranch = result.text.trim().replaceAll('/','_')
             if (gitBranch == 'develop') {
                 gitBranch = 'SNAPSHOT'
             }
@@ -47,7 +47,7 @@ allprojects {
     apply plugin: 'com.jfrog.artifactory'
 
     group = 'uk.gov.dft.bluebadge'
-    version = getVersion()
+    version = getTheVersion()
     sourceCompatibility = 1.8
 
     repositories {
