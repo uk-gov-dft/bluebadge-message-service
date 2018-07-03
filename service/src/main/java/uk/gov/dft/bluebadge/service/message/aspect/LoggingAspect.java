@@ -56,14 +56,13 @@ public class LoggingAspect {
     String declaringType = signature.getDeclaringTypeName();
     String declaringTypeName = "";
     if (declaringType != null) {
-      declaringTypeName = declaringType.substring(declaringType.lastIndexOf(".") + 1);
+      declaringTypeName = declaringType.substring(declaringType.lastIndexOf('.') + 1);
     }
 
     logger.debug(
         "***** Starting: {}.{} with {}",
         declaringTypeName,
         signature.getName(),
-        paramDebugInfo.toString(),
-        signature.toString());
+        paramDebugInfo);
   }
 }

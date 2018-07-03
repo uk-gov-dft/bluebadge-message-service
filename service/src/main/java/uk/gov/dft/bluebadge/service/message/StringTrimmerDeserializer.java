@@ -14,7 +14,7 @@ public class StringTrimmerDeserializer extends JsonDeserializer<String> {
 
   @Override
   public String deserialize(final JsonParser p, final DeserializationContext ctxt)
-      throws IOException, JsonProcessingException {
+      throws IOException {
 
     String result = StringDeserializer.instance.deserialize(p, ctxt);
     return StringUtils.trimToNull(result);
