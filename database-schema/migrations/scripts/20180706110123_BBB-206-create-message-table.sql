@@ -2,10 +2,11 @@
 -- Migration SQL that makes the change goes here.
 
 CREATE TABLE message(
-  uuid UUID NOT NULL,
+  bbb_reference UUID NOT NULL,
   template VARCHAR (150),
+  notify_reference UUID NOT NULL,
   created_on TIMESTAMP DEFAULT now(),
-  PRIMARY KEY (uuid)
+  PRIMARY KEY (bbb_reference)
 );
 
 

@@ -6,7 +6,14 @@ Feature: Verify messages create
 
   Scenario: Send a message
     Given path 'messages'
-    And request {template: "TEST_TEMPLATE_1", emailAddress:"a@b.c", messageAttributes:{name:"bob", age:2}}
+    And request {template: "RESET_PASSWORD", emailAddress:"a@b.com", attributes:{fullName:"bob", ***REMOVED***}}
     When method POST
     Then status 200
     And match $.data contains {uuid:"#notnull"}
+
+  Scenario: Bad request for unknown template
+    Given path 'messages'
+    And request {template: "TEST_TEMPLATE_1", emailAddress:"a@b.com", attributes:{name:"bob", age:2}}
+    When method POST
+    Then status 400
+    And match $.error contains {message:"Unknown message template: TEST_TEMPLATE_1"}

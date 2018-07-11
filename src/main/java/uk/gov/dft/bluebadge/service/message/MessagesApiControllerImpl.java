@@ -8,8 +8,11 @@ import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import uk.gov.dft.bluebadge.common.api.model.CommonResponse;
+import uk.gov.dft.bluebadge.common.service.exception.ServiceException;
 import uk.gov.dft.bluebadge.model.message.generated.MessageDetails;
 import uk.gov.dft.bluebadge.model.message.generated.UuidResponse;
 import uk.gov.dft.bluebadge.model.message.generated.UuidResponseData;
@@ -17,7 +20,7 @@ import uk.gov.dft.bluebadge.service.message.generated.controller.MessagesApi;
 import uk.gov.dft.bluebadge.service.message.repository.domain.MessageEntity;
 import uk.gov.dft.bluebadge.service.message.service.MessageService;
 
-@Controller
+@RestController
 @Slf4j
 public class MessagesApiControllerImpl implements MessagesApi {
 
@@ -44,6 +47,11 @@ public class MessagesApiControllerImpl implements MessagesApi {
     return Optional.ofNullable(request);
   }
 
+  @ExceptionHandler({ServiceException.class})
+  public ResponseEntity<CommonResponse> handleServiceException(ServiceException e) {
+    return e.getResponse();
+  }
+
   @Override
   public ResponseEntity<UuidResponse> sendMessage(
       @ApiParam(value = "The template, email address and message attributes", required = true)
@@ -54,7 +62,7 @@ public class MessagesApiControllerImpl implements MessagesApi {
     MessageEntity messageEntity = service.sendMessage(messageDetails);
     UuidResponse response = new UuidResponse();
     UuidResponseData data = new UuidResponseData();
-    data.setUuid(messageEntity.getUuid().toString());
+    data.setUuid(messageEntity.getBbbReference().toString());
     response.setData(data);
     return ResponseEntity.ok(response);
   }

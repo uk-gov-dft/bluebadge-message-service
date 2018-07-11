@@ -27,12 +27,14 @@ public class MessageService {
   public MessageEntity sendMessage(MessageDetails messageDetails) {
     log.debug("Sending message for template {}", messageDetails.getTemplate());
 
-    client.emailMessage(messageDetails);
+    UUID messageRef = UUID.randomUUID();
+    UUID notifyRef = client.emailMessage(messageDetails, messageRef);
 
     MessageEntity entity =
         MessageEntity.builder()
             .template(messageDetails.getTemplate())
-            .uuid(UUID.randomUUID())
+            .bbbReference(messageRef)
+            .notifyReference(notifyRef)
             .build();
 
     repository.createMessage(entity);
