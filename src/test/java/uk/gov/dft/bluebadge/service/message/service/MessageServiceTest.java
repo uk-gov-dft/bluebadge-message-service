@@ -23,7 +23,7 @@ public class MessageServiceTest {
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
-    service = new MessageService(repository);
+    service = new MessageService(repository, client);
   }
 
   @Test
