@@ -50,7 +50,7 @@ public class MessagesApiControllerImpl implements MessagesApi {
           @RequestBody
           @Valid
           MessageDetails messageDetails) {
-    //    log.info("Se");
+    log.info("Sending message. Details:{}", messageDetails);
     MessageEntity messageEntity = service.sendMessage(messageDetails);
     UuidResponse response = new UuidResponse();
     UuidResponseData data = new UuidResponseData();
