@@ -13,7 +13,7 @@ node {
 
     stage ('Gradle build') {
         try {
-            sh './gradlew clean build bootJar artifactoryPublish artifactoryDeploy'
+            sh './gradlew clean build bootJar createDatabaseSchemaZip artifactoryPublish artifactoryDeploy'
         }
         finally {
             junit '**/TEST*.xml'
