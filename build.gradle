@@ -138,6 +138,9 @@ compileJava.dependsOn 'googleJavaFormat'
 publishing {
     publications {
         project_service(MavenPublication) {
+            artifact ("service/build/database-schema/" + getTheVersion() + "_schema.zip") {
+                classifier "schema"
+            }
             from components.java
             artifactId "${archivesBaseName}"
         }
@@ -180,7 +183,7 @@ artifactory {
         publishArtifacts = true
         publishPom = true
         defaults {
-            publications('project_model', 'project_service')
+            publications('project_service')
             publishArtifacts = true
             publishPom = true
         }
@@ -241,4 +244,11 @@ task generateService(dependsOn: 'unzipGenerated', type: Sync) {
     into "src/generated/java/uk/gov/dft/bluebadge/service/message"
 }
 
-
+task createDatabaseSchemaZip(type: Zip) {
+    def targetFilename = getTheVersion() + "_schema.zip"
+    from 'database-schema/'
+    include '*'
+    include '*/*'
+    archiveName targetFilename
+    destinationDir(file("service/build/database-schema"))
+}
