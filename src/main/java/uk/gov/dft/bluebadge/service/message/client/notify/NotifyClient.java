@@ -31,6 +31,7 @@ public class NotifyClient {
     if (null == notifyTemplate) {
       Error error = new Error();
       error.setMessage("Unknown message template: " + messageDetails.getTemplate());
+      log.warn("Failed to send an email with Notify. Unknown template:{}", messageDetails.getTemplate());
       throw new BadRequestException(error);
     }
 
