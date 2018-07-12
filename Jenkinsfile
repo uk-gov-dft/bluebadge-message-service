@@ -20,15 +20,6 @@ node {
         }
     }
 
-    stage ('Run acceptance tests') {
-        try {
-            sh './gradlew bootRun acceptanceTests'
-        }
-        finally {
-            // junit '**/TEST*.xml'
-        }
-    }
-
     stage('SonarQube analysis') {
 
         withSonarQubeEnv('sonarqube') {
