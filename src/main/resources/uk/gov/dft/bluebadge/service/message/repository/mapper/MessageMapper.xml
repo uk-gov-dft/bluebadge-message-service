@@ -1,0 +1,21 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="uk.gov.dft.bluebadge.service.message.repository.mapper.MessageMapper">
+
+    <insert id="createMessage" parameterType="MessageEntity">
+        INSERT INTO message
+        (template, uuid)
+        VALUES (
+        #{template},
+        #{uuid,javaType=java.util.UUID,jdbcType=OTHER,typeHandler=uk.gov.dft.bluebadge.service.message.repository.UuidTypeHandler}
+        )
+    </insert>
+
+    <select id="selectMessageByUuid" resultType="MessageEntity" parameterType="java.util.UUID" >
+        SELECT m.template, m.uuid
+        FROM message m
+        WHERE m.uuid = #{uuid,jdbcType=OTHER}
+    </select>
+
+</mapper>
