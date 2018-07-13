@@ -31,7 +31,8 @@ public class NotifyClient {
     if (null == notifyTemplate) {
       Error error = new Error();
       error.setMessage("Unknown message template: " + messageDetails.getTemplate());
-      log.warn("Failed to send an email with Notify. Unknown template:{}", messageDetails.getTemplate());
+      log.warn(
+          "Failed to send an email with Notify. Unknown template:{}", messageDetails.getTemplate());
       throw new BadRequestException(error);
     }
 
@@ -45,7 +46,9 @@ public class NotifyClient {
       return emailResponse.getNotificationId();
     } catch (NotificationClientException e) {
       log.warn("Failed to send an email with Notify.", e);
-      return null;
+      Error error = new Error();
+      error.setMessage("Notify exception: " + e.getMessage());
+      throw new BadRequestException(error);
     }
   }
 }

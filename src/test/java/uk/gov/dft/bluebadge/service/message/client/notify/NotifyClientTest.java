@@ -1,6 +1,7 @@
 package uk.gov.dft.bluebadge.service.message.client.notify;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Fail.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -17,6 +18,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import uk.gov.dft.bluebadge.common.service.exception.BadRequestException;
 import uk.gov.dft.bluebadge.model.message.generated.MessageDetails;
 import uk.gov.service.notify.NotificationClient;
+import uk.gov.service.notify.NotificationClientException;
 import uk.gov.service.notify.SendEmailResponse;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -66,5 +68,32 @@ public class NotifyClientTest {
     messageDetails.setTemplate("not a valid template");
     notifyClient.emailMessage(messageDetails, uuid);
     verify(mockClient, never()).sendEmail(any(), any(), any(), any());
+  }
+
+  @SneakyThrows
+  @Test
+  public void whenNotifyException_thenException() {
+    UUID ourRef = UUID.randomUUID();
+    when(mockTemplates.getNotifyTemplate("TEST_TEMPLATE_1")).thenReturn("notify_template");
+    when(mockClient.sendEmail(any(), any(), any(), any()))
+        .thenThrow(new NotificationClientException("Notify no like"));
+
+    messageDetails.setTemplate("TEST_TEMPLATE_1");
+    try {
+      notifyClient.emailMessage(messageDetails, ourRef);
+      fail("No exception thrown");
+    } catch (BadRequestException e) {
+      assertThat(e.getResponse()).isNotNull();
+      assertThat(e.getResponse().getBody()).isNotNull();
+      assertThat(e.getResponse().getBody().getError()).isNotNull();
+      assertThat(e.getResponse().getBody().getError().getMessage()).contains("Notify no like");
+    }
+
+    verify(mockClient)
+        .sendEmail(
+            "notify_template",
+            messageDetails.getEmailAddress(),
+            messageAttributes,
+            ourRef.toString());
   }
 }
