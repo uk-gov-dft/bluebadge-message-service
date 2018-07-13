@@ -7,9 +7,9 @@ notify:
 
 logging:
   level:
-    root: INFO
+    root: ${APP_LOGGING_LEVEL:-INFO}
     sample.mybatis.mapper: WARN
-    uk.gov.dft.bluebadge.service: DEBUG
+    uk.gov.dft.bluebadge.service: ${APP_LOGGING_LEVEL:-DEBUG}
     org.springframework.security: DEBUG
 
 management:
