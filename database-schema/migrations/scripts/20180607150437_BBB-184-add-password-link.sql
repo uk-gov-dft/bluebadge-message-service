@@ -18,5 +18,4 @@ COMMENT ON COLUMN  ***REMOVED***;
 
 --//@UNDO
 -- SQL to undo the change goes here.
-DROP TABLE email_link;
-
+DROP TABLE password_reset_email;

@@ -25,9 +25,9 @@ public class MessageRepositoryTest extends ApplicationContextTests {
 
     assertThat(resultCount).isEqualTo(1);
 
-    MessageEntity persisted = retrieveMessageEntityByUUID(messageEntity.getUuid());
+    MessageEntity persisted = retrieveMessageEntityByUUID(messageEntity.getBbbReference());
     assertThat(persisted).isNotNull();
-    assertThat(persisted.getUuid()).isEqualTo(messageEntity.getUuid());
+    assertThat(persisted.getBbbReference()).isEqualTo(messageEntity.getBbbReference());
     assertThat(persisted.getTemplate()).isEqualTo(messageEntity.getTemplate());
   }
 

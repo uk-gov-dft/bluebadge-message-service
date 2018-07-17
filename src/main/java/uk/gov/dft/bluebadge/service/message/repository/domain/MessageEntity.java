@@ -9,5 +9,6 @@ import lombok.NonNull;
 @Getter
 public class MessageEntity {
   @NonNull private String template;
-  @NonNull private UUID uuid;
+  @NonNull private UUID bbbReference;
+  @NonNull private UUID notifyReference;
 }

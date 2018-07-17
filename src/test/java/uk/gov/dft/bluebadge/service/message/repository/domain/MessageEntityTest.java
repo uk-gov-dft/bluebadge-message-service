@@ -9,19 +9,28 @@ public class MessageEntityTest {
   @Test
   public void whenAllFieldsSet_thenOk() {
     UUID uuid = UUID.randomUUID();
-    MessageEntity result = MessageEntity.builder().uuid(uuid).template("stuff").build();
+    MessageEntity result =
+        MessageEntity.builder().notifyReference(uuid).bbbReference(uuid).template("stuff").build();
     assertThat(result).isNotNull();
     assertThat(result.getTemplate()).isEqualTo("stuff");
-    assertThat(result.getUuid()).isEqualTo(uuid);
+    assertThat(result.getBbbReference()).isEqualTo(uuid);
   }
 
   @Test(expected = NullPointerException.class)
   public void whenTemplateFieldNull_thenAssert() {
-    MessageEntity.builder().uuid(UUID.randomUUID()).build();
+    MessageEntity.builder()
+        .bbbReference(UUID.randomUUID())
+        .notifyReference(UUID.randomUUID())
+        .build();
   }
 
   @Test(expected = NullPointerException.class)
-  public void whenUUIDFieldNull_thenAssert() {
-    MessageEntity.builder().template("stuff").build();
+  public void whenBBBRefFieldNull_thenAssert() {
+    MessageEntity.builder().template("stuff").notifyReference(UUID.randomUUID()).build();
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void whenNotifyRefFieldNull_thenAssert() {
+    MessageEntity.builder().template("stuff").bbbReference(UUID.randomUUID()).build();
   }
 }

@@ -9,7 +9,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @EnableSwagger2
-@ComponentScan
+@ComponentScan(basePackages = "uk.gov.dft.bluebadge")
 public class MessageServiceApplication implements CommandLineRunner {
 
   @Override

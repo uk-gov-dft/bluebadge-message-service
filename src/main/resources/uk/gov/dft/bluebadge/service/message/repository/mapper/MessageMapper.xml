@@ -5,17 +5,18 @@
 
     <insert id="createMessage" parameterType="MessageEntity">
         INSERT INTO message
-        (template, uuid)
+        (template, bbb_reference, notify_reference)
         VALUES (
         #{template},
-        #{uuid,javaType=java.util.UUID,jdbcType=OTHER,typeHandler=uk.gov.dft.bluebadge.service.message.repository.UuidTypeHandler}
+        #{bbbReference,javaType=java.util.UUID,jdbcType=OTHER,typeHandler=uk.gov.dft.bluebadge.service.message.repository.UuidTypeHandler},
+        #{notifyReference,javaType=java.util.UUID,jdbcType=OTHER,typeHandler=uk.gov.dft.bluebadge.service.message.repository.UuidTypeHandler}
         )
     </insert>
 
     <select id="selectMessageByUuid" resultType="MessageEntity" parameterType="java.util.UUID" >
-        SELECT m.template, m.uuid
+        SELECT m.template, m.bbb_reference, m.notify_reference
         FROM message m
-        WHERE m.uuid = #{uuid,jdbcType=OTHER}
+        WHERE m.bbb_reference = #{uuid,jdbcType=OTHER}
     </select>
 
 </mapper>
