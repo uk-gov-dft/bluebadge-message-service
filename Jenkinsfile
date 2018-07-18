@@ -6,7 +6,7 @@ node {
     stage('Clone sources') {
       git(
            url: "${REPONAME}",
-           credentialsId: 'username***REMOVED***-github-automation-uk-gov-dft',
+           credentialsId: 'dft-buildbot-valtech',
            branch: "${BRANCH_NAME}"
         )
      }
