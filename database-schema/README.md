@@ -1,106 +1,61 @@
-Welcome!
+MYBATIS Migrations
+==================
+[![Build Status](https://travis-ci.org/mybatis/migrations.svg?branch=master)](https://travis-ci.org/mybatis/migrations)
+[![Coverage Status](https://coveralls.io/repos/mybatis/migrations/badge.svg?branch=master&service=github)](https://coveralls.io/github/mybatis/migrations?branch=master)
+[![Dependency Status](https://www.versioneye.com/user/projects/5619ae16a193340f2f000505/badge.svg?style=flat)](https://www.versioneye.com/user/projects/5619ae16a193340f2f000505)
+[![Maven central](https://maven-badges.herokuapp.com/maven-central/org.mybatis/mybatis-migrations/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.mybatis/mybatis-migrations)
+[![License](http://img.shields.io/:license-apache-brightgreen.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
-Usage
------
+![mybatis-migrations](http://mybatis.github.io/images/mybatis-logo.png)
 
-### Prerequisites
-Gradle in PATH environment variable.
+## Requirements
+  MyBatis Migrations is a Java tool, so you must have Java installed in order to proceed. 
+Users need at least the Java Runtime Environment (JRE), the Java Development Kit (JDK) is a plus.
 
-Database, user and schema already created.  Example create database for local instance;
+See the [reference documentation](http://mybatis.github.io/migrations)
 
-https://medium.com/coding-blocks/creating-user-database-and-adding-access-on-postgresql-8bfcd2f4a91e
+## Installation
+|Bundle Locations|
+|------|
+|[Releases - https://oss.sonatype.org/content/repositories/releases/org/mybatis/mybatis-migrations](https://oss.sonatype.org/content/repositories/releases/org/mybatis/mybatis-migrations/)|
+|[Snapshots - https://oss.sonatype.org/content/repositories/snapshots/org/mybatis/mybatis-migrations](https://oss.sonatype.org/content/repositories/snapshots/org/mybatis/mybatis-migrations/)|
 
-Short example;
+#### Windows
+1. Unzip the distribution archive, i.e. mybatis-3.3.4-migrations.zip to the directory you wish
+      to install MyBatis Migrations.
+      These instructions assume you chose C:\Program Files\mybatis.
+      The subdirectory mybatis-migrations-3.3.4 will be created from the archive.
+1. Add the MIGRATIONS_HOME environment variable by opening up the system properties (WinKey + Pause), selecting the
+      Advanced tab, and the Environment Variables button, then adding the MIGRATIONS_HOME variable in the user
+      variables with the value C:\Program Files\mybatis\mybatis-migrations-3.3.4.
+      Be sure to omit any quotation marks around the path even if it contains spaces.
+1. In the same dialog, add the MIGRATIONS environment variable in the user variables with the
+      value %MIGRATIONS_HOME%\bin.
+1. In the same dialog, update/create the Path environment variable in the user variables and prepend the value
+      %MIGRATIONS% to add MyBatis Migrations available in the command line.
 
-CREATE user developer;
+#### Unix-based Operating Systems (Linux, Solaris and Mac OS X)
+Download and extract migrations to any directory.
+```sh
+cd $HOME/opt
+wget https://oss.sonatype.org/content/repositories/releases/org/mybatis/mybatis-migrations/3.3.1/mybatis-migrations-3.3.1-bundle.zip
+unzip mybatis-migrations-3.3.1-bundle.zip
+```
 
-CREATE DATABASE xyz OWNER developer;
+In your ~/.bashrc or ~/.zshrc or equivalent add
+```
+export MIGRATIONS=$HOME/opt/mybatis-migrations-3.3.1 # replace with path you extracted to
+export PATH=$MIGRATIONS/bin:$PATH
+```
 
-CREATE SCHEMA abc AUTHORIZATION developer;
+## Quick setup
+```sh
+mkdir $HOME/my-migrations
+cd $HOME/my-migrations
+migrate init
+```
+After that read the ./drivers and ./environments section of [Migrations init](http://mybatis.github.io/migrations/init.html)
 
-### General
+## License
 
-To specify an environment use --Penv=xyz where xyz is a properties file
-in the environments folder without the .properties suffix.
-
-### New script
-
-To create  new migration script, at the command line (project root dir) type:
-
-<code>gradle migrateNew -Pdescription="BBB-nnn-Short_Summary"</code>
-
-* Replace the nnn with your ticket number.
-
-This will create a new sql file in the scripts directory that you edit to add your sql migration script.
-
-**You must add the rollback script under the <code>--//@UNDO</code> tag in the script file.**
-
-**The sql comment prior to //@UNDO must NOT have a space in it.**
-
-### Show status of migrations
-
-To show the status of migrations run the following on the command line:
-
-<code>gradle migrateStatus -Penv=local --info</code>
-
-This will show migration scripts that have not been applied. Need info logging to get anything meaningful output.
-
-
-### Apply pending migration scripts
-
-To apply all pending scripts on a database, run the following at the command line:
-
-<code>gradle migrateUp -Penv=local</code>
-
-This will attempt to apply the migration script and will report on any errors.
-
-
-### Rollback migration scripts
-
-To rollback migration scripts run the following at the command line:
-
-<code>gradle migrateDown -Penv=local \[-Psteps=n\]</code>
-
-This will attempt to apply the migration script and will report on any errors.
-
-The optional parameter <code>downSteps</code> defaults to 1 when not specified.
-
-
-Additional Info
----------------
-
-See https://github.com/marceloemanoel/gradle-migrations-plugin
-See http://www.mybatis.org/migrations/
-
-The repository base directory contains three subdirectories as follows:
-
-./drivers
-
-Place your JDBC driver .jar or .zip files in this directory.  Upon running a
-migration, the drivers will be dynamically loaded.
-
-./environments
-
-In the environments folder you will find .properties files that represent
-your database instances.  By default a development.properties file is
-created for you to configure your development time database properties.
-You can also create test.properties and production.properties files.
-The environment can be specified when running a migration by using
-the -Penv=<environment> option (without the path or ".properties" part).
-
-The default environment is "development".
-
-./scripts
-
-This directory contains your migration SQL files.  These are the files
-that contain your DDL to both upgrade and downgrade your database
-structure.  By default, the directory will contain the script to
-create the changelog table, plus one empty "first" migration script.
-To create a new migration script, use the "new" command.  To run
-all pending migrations, use the "up" command.  To undo the last
-migration applied, use the "down" command etc.
-
-For more information about commands and options, run the MyBatis
-Migration script with the --help option.
-
-Enjoy.
+Migrations is [Apache Licensed](LICENSE)
