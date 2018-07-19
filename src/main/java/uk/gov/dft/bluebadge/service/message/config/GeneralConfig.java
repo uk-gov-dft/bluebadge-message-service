@@ -9,7 +9,7 @@ import uk.gov.service.notify.NotificationClient;
 
 @Configuration
 public class GeneralConfig {
-  @Value("${notify.apiKey}")
+  @Value("${blue-badge.notify.apiKey}")
   private String apiKey;
 
   @Bean
@@ -17,7 +17,7 @@ public class GeneralConfig {
     return new NotificationClient(apiKey);
   }
 
-  @ConfigurationProperties("notify")
+  @ConfigurationProperties("blue-badge.notify")
   @Bean
   public NotifyTemplates notifyTemplates() {
     return new NotifyTemplates();
