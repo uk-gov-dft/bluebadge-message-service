@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class ActuatorSecurityConfig extends WebSecurityConfigurerAdapter {
   /** Order before the resource server (which is 3) */
   public static final int BEFORE_RESOURCE_SERVER_ORDER = 2;
+
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.requestMatcher(EndpointRequest.toAnyEndpoint())
