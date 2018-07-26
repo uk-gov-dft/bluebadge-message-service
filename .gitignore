@@ -38,3 +38,4 @@ out
 /env.mk
 .gradle
 !settings.gradle
+VERSION-computed
