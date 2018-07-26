@@ -1,0 +1,7 @@
+notify:
+   ***REMOVED***
+
+spring:
+  datasource:
+    url: jdbc:postgresql://postgresql:5432/bb_dev?currentSchema=message
+
