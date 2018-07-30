@@ -1,5 +1,8 @@
-notify:
-   ***REMOVED***
+blue-badge:
+  auth-server:
+    url: http://authorisation-service:8380/bb_auth
+  notify:
+     ***REMOVED***
 
 spring:
   datasource:
