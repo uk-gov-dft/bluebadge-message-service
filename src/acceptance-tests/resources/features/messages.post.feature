@@ -3,6 +3,8 @@ Feature: Verify messages create
 
   Background:
     * url baseUrl
+    * def result = callonce read('./oauth2.feature')
+    * header Authorization = 'Bearer ' + result.accessToken
 
   Scenario: Send a message
     Given path 'messages'
