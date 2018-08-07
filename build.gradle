@@ -63,15 +63,6 @@ sourceSets {
             srcDir 'src/test/java'
         }
     }
-    acceptanceTests {
-        java.srcDir 'src/acceptance-tests/java'
-        resources.srcDir 'src/acceptance-tests/resources'
-    }
-}
-
-configurations {
-    acceptanceTestsCompile.extendsFrom testCompile
-    acceptanceTestsRuntime.extendsFrom testRuntime
 }
 
 tasks.withType(FindBugs) {
@@ -103,18 +94,10 @@ dependencies {
 
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.8.0'
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.8.0'
-//    compile group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
 
     compileOnly ('org.projectlombok:lombok:1.16.22')
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
-
-    //	Acceptance test
-    testCompile group: 'com.intuit.karate', name: 'karate-apache', version: '0.7.0.2'
-    testCompile group: 'com.intuit.karate', name: 'karate-junit4', version: '0.7.0.2'
-    testCompile group: 'info.cukes', name: 'cucumber-java', version:'1.2.5'
-    testCompile group: 'info.cukes', name: 'cucumber-junit', version:'1.2.5'
-    testCompile group: 'info.cukes', name: 'cucumber-spring', version:'1.2.5'
     testCompileOnly ('org.projectlombok:lombok:1.16.22')
 
     runtime('org.springframework.boot:spring-boot-devtools')
@@ -123,17 +106,10 @@ dependencies {
     runtime group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.3'
 }
 
-task acceptanceTests(type:Test){
-    outputs.upToDateWhen { false }
-
-    description = "Run acceptance tests (located in src/acceptance-tests/...)."
-    testClassesDir = project.sourceSets.acceptanceTests.output.classesDir
-    classpath = project.sourceSets.acceptanceTests.runtimeClasspath
-}
-
 checkstyle {
     toolVersion "8.9"
 }
+
 
 jacoco {
     toolVersion = "0.8.1"
