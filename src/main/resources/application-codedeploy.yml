@@ -1,9 +1,14 @@
-notify:
-   ***REMOVED***
-  templates:
-    NEW_USER: a364e3cb-a72b-41fa-b28f-e7317525d028
-    RESET_PASSWORD: 2ee75a54-8adc-41aa-ac06-5dfd724f48cb
-    PASSWORD_RESET_SUCCESS: ea020bfb-cde8-4605-8726-248a38cc6bf2
+blue-badge:
+  auth-server:
+    url: https://authorisation-service.${bb_env}.does.not.exist/bb_auth
+    client-id: bb_user_management_id
+     ***REMOVED***
+  notify:
+     ***REMOVED***
+    templates:
+      NEW_USER: a364e3cb-a72b-41fa-b28f-e7317525d028
+      RESET_PASSWORD: 2ee75a54-8adc-41aa-ac06-5dfd724f48cb
+      PASSWORD_RESET_SUCCESS: ea020bfb-cde8-4605-8726-248a38cc6bf2
 
 logging:
   level:
