@@ -1,6 +1,6 @@
 blue-badge:
   auth-server:
-    url: https://authorisation-service.${bb_env}.does.not.exist/bb_auth
+    url: https://authorisation-service.${bb_env}.${url}/bb_auth
     client-id: bb_user_management_id
      ***REMOVED***
   notify:
