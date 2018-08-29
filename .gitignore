@@ -39,3 +39,4 @@ out
 .gradle
 !settings.gradle
 VERSION-computed
+**/dev-env*
