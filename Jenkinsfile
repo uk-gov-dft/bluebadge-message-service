@@ -24,6 +24,19 @@ node {
         }
     }
 
+    stage ('OWASP Dependency Check') {
+        sh './gradlew dependencyCheckUpdate dependencyCheckAggregate'
+
+        publishHTML (target: [
+         allowMissing: false,
+         alwaysLinkToLastBuild: false,
+         keepAll: true,
+         reportDir: 'build/reports',
+         reportFiles: 'dependency-check-report.html',
+         reportName: "OWASP Dependency Check"
+        ])
+    }
+
     stage('SonarQube analysis') {
 
         withSonarQubeEnv('sonarqube') {
