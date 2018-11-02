@@ -8,6 +8,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.CodeSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,12 +20,18 @@ public class LoggingAspect {
 
   private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
-  @AfterReturning("execution(* uk.gov.dft.bluebadge..*.*(..))")
+  @Pointcut("execution(* uk.gov.dft.bluebadge..*.*(..))")
+  private void blueBadgePackage() { }
+
+  @Pointcut("within(uk.gov.dft.bluebadge.common.esapi..*)")
+  private void esapiFilter() { }
+
+  @AfterReturning("blueBadgePackage() && !esapiFilter()")
   public void logMethodAccessAfter(JoinPoint joinPoint) {
     logger.debug("***** Completed: {} ***** ", joinPoint.getSignature().getName());
   }
 
-  @Before("execution(* uk.gov.dft.bluebadge..*.*(..))")
+  @Before("blueBadgePackage() && !esapiFilter()")
   public void logMethodAccessBefore(JoinPoint joinPoint) {
     if (!logger.isDebugEnabled()) {
       return;
@@ -62,4 +69,6 @@ public class LoggingAspect {
     logger.debug(
         "***** Starting: {}.{} with {}", declaringTypeName, signature.getName(), paramDebugInfo);
   }
+
+
 }
