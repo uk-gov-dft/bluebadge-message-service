@@ -87,7 +87,7 @@ tasks.withType(Pmd) {
 }
 
 dependencies {
-    ext.commonVersion = '0.6.7-SNAPSHOT'
+    ext.commonVersion = '0.6.8-SNAPSHOT'
 
     compile( group: 'uk.gov.dft.bluebadge', name: 'bluebadge-common', version: "${commonVersion}", changing: true ){
         exclude group: 'org.mybatis.spring.boot', module: 'mybatis-spring-boot-starter'
@@ -100,6 +100,7 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-starter-aop')
     compile("org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.2")
+    compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-sleuth', version: '2.0.1.RELEASE'
     compile('org.postgresql:postgresql:42.2.2')
     compile 'uk.gov.service.notify:notifications-java-client:3.9.2-RELEASE'
 
