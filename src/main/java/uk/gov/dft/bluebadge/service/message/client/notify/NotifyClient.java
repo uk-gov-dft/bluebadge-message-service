@@ -4,8 +4,6 @@ import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import uk.gov.dft.bluebadge.common.api.model.Error;
-import uk.gov.dft.bluebadge.common.service.exception.BadRequestException;
 import uk.gov.dft.bluebadge.model.message.generated.MessageDetails;
 import uk.gov.service.notify.NotificationClient;
 import uk.gov.service.notify.NotificationClientException;
@@ -15,40 +13,48 @@ import uk.gov.service.notify.SendEmailResponse;
 @Slf4j
 public class NotifyClient {
 
-  private final NotificationClient client;
-  private final NotifyTemplates notifyTemplates;
+  private final NotificationClient dftClient;
 
   @Autowired
-  public NotifyClient(NotificationClient client, NotifyTemplates notifyTemplates) {
-    this.client = client;
-    this.notifyTemplates = notifyTemplates;
+  public NotifyClient(NotificationClient client) {
+    this.dftClient = client;
   }
 
-  public UUID emailMessage(MessageDetails messageDetails, UUID messageRef) {
-    log.debug("Sending an email message to Notify. Template:{}", messageDetails.getTemplate());
-    String notifyTemplate = notifyTemplates.getNotifyTemplate(messageDetails.getTemplate());
+  public UUID emailMessage(
+      String notifyApiKey, String notifyTemplate, MessageDetails messageDetails, UUID messageRef)
+      throws NotificationClientException {
+    log.info(
+        "Sending an email message to LA ({}) Notify. Template name:{}, Notify Template:{}, BB Ref:{}",
+        messageDetails.getLaShortCode(),
+        messageDetails.getTemplate(),
+        notifyTemplate,
+        messageRef);
+    NotificationClient client = new NotificationClient(notifyApiKey);
+    return emailMessage(client, notifyTemplate, messageDetails, messageRef);
+  }
 
-    if (null == notifyTemplate) {
-      Error error = new Error();
-      error.setMessage("Unknown message template: " + messageDetails.getTemplate());
-      log.warn(
-          "Failed to send an email with Notify. Unknown template:{}", messageDetails.getTemplate());
-      throw new BadRequestException(error);
-    }
+  public UUID emailMessage(String notifyTemplate, MessageDetails messageDetails, UUID messageRef)
+      throws NotificationClientException {
+    log.info(
+        "Sending an email message to DFT Notify. Template name:{}, Notify Template:{}, BB Ref:{}",
+        messageDetails.getTemplate(),
+        notifyTemplate,
+        messageRef);
+    return emailMessage(dftClient, notifyTemplate, messageDetails, messageRef);
+  }
 
-    try {
-      SendEmailResponse emailResponse =
-          client.sendEmail(
-              notifyTemplate,
-              messageDetails.getEmailAddress(),
-              messageDetails.getAttributes(),
-              messageRef.toString());
-      return emailResponse.getNotificationId();
-    } catch (NotificationClientException e) {
-      log.warn("Failed to send an email with Notify.", e);
-      Error error = new Error();
-      error.setMessage("Notify exception: " + e.getMessage());
-      throw new BadRequestException(error);
-    }
+  private UUID emailMessage(
+      NotificationClient client,
+      String notifyTemplate,
+      MessageDetails messageDetails,
+      UUID messageRef)
+      throws NotificationClientException {
+    SendEmailResponse emailResponse =
+        client.sendEmail(
+            notifyTemplate,
+            messageDetails.getEmailAddress(),
+            messageDetails.getAttributes(),
+            messageRef.toString());
+    return emailResponse.getNotificationId();
   }
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.dft.bluebadge.common.api.model.CommonResponse;
+import uk.gov.dft.bluebadge.common.controller.AbstractController;
 import uk.gov.dft.bluebadge.common.service.exception.ServiceException;
 import uk.gov.dft.bluebadge.model.message.generated.MessageDetails;
 import uk.gov.dft.bluebadge.model.message.generated.UuidResponse;
@@ -22,7 +23,7 @@ import uk.gov.dft.bluebadge.service.message.service.MessageService;
 
 @RestController
 @Slf4j
-public class MessagesApiControllerImpl implements MessagesApi {
+public class MessagesApiControllerImpl extends AbstractController implements MessagesApi {
 
   private MessageService service;
   private ObjectMapper objectMapper;
