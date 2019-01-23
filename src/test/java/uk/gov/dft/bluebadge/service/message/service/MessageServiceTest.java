@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.UUID;
 import lombok.SneakyThrows;
 import org.junit.Before;
@@ -29,11 +30,18 @@ public class MessageServiceTest {
   @Mock private NotifyClient client;
   @Mock private NotifyTemplates notifyTemplates;
   @Mock private SecretsManager secretsManager;
+  private NotifyProfile testNotifyProfile;
 
   @Before
   public void setUp() {
     MockitoAnnotations.initMocks(this);
     service = new MessageService(repository, client, notifyTemplates, secretsManager);
+
+    testNotifyProfile =
+        NotifyProfile.builder()
+            .apiKey("la notify api key")
+            .templates(ImmutableMap.of(TEST_TEMPLATE, "la notify template id"))
+            .build();
   }
 
   @Test
@@ -67,9 +75,7 @@ public class MessageServiceTest {
     when(repository.createMessage(any(MessageEntity.class))).thenReturn(1);
     UUID notifyRef = UUID.randomUUID();
     when(client.emailMessage(any(), any(), any(), any())).thenReturn(notifyRef);
-    when(secretsManager.retrieveLANotifyApiKey("SOME_LA")).thenReturn("la notify api key");
-    when(secretsManager.retrieveLANotifyTemplate("SOME_LA", TEST_TEMPLATE))
-        .thenReturn("la notify template id");
+    when(secretsManager.retrieveLANotifyProfile("SOME_LA")).thenReturn(testNotifyProfile);
 
     MessageDetails messageDetails = new MessageDetails();
     messageDetails.setTemplate(TEST_TEMPLATE);
@@ -101,9 +107,7 @@ public class MessageServiceTest {
     UUID notifyRef = UUID.randomUUID();
     when(client.emailMessage(any(), any(), any())).thenReturn(notifyRef);
     when(notifyTemplates.getNotifyTemplate(TEST_TEMPLATE)).thenReturn("test template");
-    when(secretsManager.retrieveLANotifyApiKey("SOME_LA")).thenReturn("la notify api key");
-    when(secretsManager.retrieveLANotifyTemplate("SOME_LA", TEST_TEMPLATE))
-        .thenReturn("la notify template id");
+    when(secretsManager.retrieveLANotifyProfile("SOME_LA")).thenReturn(testNotifyProfile);
 
     MessageDetails messageDetails = new MessageDetails();
     messageDetails.setTemplate(TEST_TEMPLATE);

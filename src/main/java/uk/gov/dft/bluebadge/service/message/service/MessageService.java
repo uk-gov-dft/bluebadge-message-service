@@ -38,32 +38,29 @@ public class MessageService {
   }
 
   public MessageEntity sendMessage(MessageDetails messageDetails) {
-    String laNotifyApiKey = null;
-    String laNotifyTemplate = null;
+    NotifyProfile laNotifyProfile = null;
     if (StringUtils.hasText(messageDetails.getLaShortCode())) {
-      laNotifyApiKey = secretsManager.retrieveLANotifyApiKey(messageDetails.getLaShortCode());
-      if (StringUtils.hasText(laNotifyApiKey)) {
-        laNotifyTemplate =
-            secretsManager.retrieveLANotifyTemplate(
-                messageDetails.getLaShortCode(), messageDetails.getTemplate());
-      }
+      laNotifyProfile = secretsManager.retrieveLANotifyProfile(messageDetails.getLaShortCode());
     }
 
-    if (!StringUtils.hasText(laNotifyTemplate)) {
+    if (null == laNotifyProfile
+        || !laNotifyProfile.getTemplates().containsKey(messageDetails.getTemplate())) {
       return sendDftMessage(messageDetails);
     }
 
+    String notifyTemplate = laNotifyProfile.getTemplates().get(messageDetails.getTemplate());
     try {
       UUID messageRef = UUID.randomUUID();
       UUID notifyRef =
-          client.emailMessage(laNotifyApiKey, laNotifyTemplate, messageDetails, messageRef);
-
+          client.emailMessage(
+              laNotifyProfile.getApiKey(), notifyTemplate, messageDetails, messageRef);
+      log.info("Successfully sent LA message. BB Ref:{}, Notify ref:{}", messageRef, notifyRef);
       return persistMessage(messageDetails, messageRef, notifyRef);
     } catch (Exception e) {
       log.error(
           "Failed to send email from LA ({}) notify account. Template ID:{}. Error:{}",
           messageDetails.getLaShortCode(),
-          laNotifyTemplate,
+          notifyTemplate,
           e.getMessage(),
           e);
       return sendDftMessage(messageDetails);
@@ -76,14 +73,14 @@ public class MessageService {
     String notifyTemplate = dftNotifyTemplates.getNotifyTemplate(messageDetails.getTemplate());
 
     if (null == notifyTemplate) {
-      throw new RuntimeException(
+      throw new IllegalStateException(
           "No configured template for template name:" + messageDetails.getTemplate());
     }
 
     try {
       UUID messageRef = UUID.randomUUID();
-
       UUID notifyRef = client.emailMessage(notifyTemplate, messageDetails, messageRef);
+      log.info("Successfully sent LA message. BB Ref:{}, Notify ref:{}", messageRef, notifyRef);
 
       return persistMessage(messageDetails, messageRef, notifyRef);
     } catch (NotificationClientException e) {

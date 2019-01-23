@@ -1,11 +1,20 @@
 package uk.gov.dft.bluebadge.service.message.service;
 
 import com.amazonaws.services.secretsmanager.AWSSecretsManager;
+import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
+import com.amazonaws.services.secretsmanager.model.CreateSecretRequest;
+import com.amazonaws.services.secretsmanager.model.CreateSecretResult;
 import com.amazonaws.services.secretsmanager.model.GetSecretValueRequest;
 import com.amazonaws.services.secretsmanager.model.GetSecretValueResult;
 import com.amazonaws.services.secretsmanager.model.InvalidParameterException;
 import com.amazonaws.services.secretsmanager.model.InvalidRequestException;
+import com.amazonaws.services.secretsmanager.model.ListSecretsRequest;
 import com.amazonaws.services.secretsmanager.model.ResourceNotFoundException;
+import com.amazonaws.services.secretsmanager.model.Tag;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,36 +27,34 @@ import org.springframework.util.Assert;
 @Slf4j
 public class SecretsManager {
 
-  private static final String API_KEY = "%s/notify/%s/apikey";
-  private static final String TEMPLATE_KEY = "%s/notify/%s/template/%s";
+  private static final String LA_NOTIFY_KEY = "%s/notify/%s";
 
   private final AWSSecretsManager awsSecretsManager;
   private final String secretEnv;
+  private final ObjectMapper objectMapper;
 
   @Autowired
   SecretsManager(
-      AWSSecretsManager awsSecretsManager, @Value("blue-badge.notify.secretEnv") String secretEnv) {
+      AWSSecretsManager awsSecretsManager,
+      @Value("${blue-badge.notify.secretEnv}") String secretEnv) {
     this.awsSecretsManager = awsSecretsManager;
     this.secretEnv = secretEnv;
+    objectMapper = new ObjectMapper();
   }
 
-  public String retrieveLANotifyApiKey(String la) {
+  public NotifyProfile retrieveLANotifyProfile(String la) {
     Assert.hasText(la, "LA short code is not set");
-    return getSecret(String.format(API_KEY, secretEnv, la));
+    return getSecret(String.format(LA_NOTIFY_KEY, secretEnv, la));
   }
 
-  public String retrieveLANotifyTemplate(String la, TemplateName template) {
-    Assert.hasText(la, "LA short code is not set");
-    Assert.notNull(template, "Template is not set");
-    return getSecret(String.format(TEMPLATE_KEY, secretEnv, la, template.name()));
-  }
-
-  private String getSecret(String secretName) {
+  @SneakyThrows
+  private NotifyProfile getSecret(String secretName) {
     String secret;
     GetSecretValueRequest getSecretValueRequest =
         new GetSecretValueRequest().withSecretId(secretName);
     GetSecretValueResult getSecretValueResult = null;
     try {
+      awsSecretsManager.listSecrets(new ListSecretsRequest());
       getSecretValueResult = awsSecretsManager.getSecretValue(getSecretValueRequest);
     } catch (ResourceNotFoundException e) {
       log.debug("The requested secret " + secretName + " was not found");
@@ -63,11 +70,45 @@ public class SecretsManager {
 
     if (getSecretValueResult.getSecretString() != null) {
       secret = getSecretValueResult.getSecretString();
-      log.debug(secret);
-      return secret;
+      log.debug("Secret for key:{}, {}", secretName, secret);
+      NotifyProfile laNotifyProfile = objectMapper.readValue(secret, NotifyProfile.class);
+      log.debug("Notify profile for key:{}, {}", secretName, laNotifyProfile);
+      return laNotifyProfile;
     }
 
     log.error("Retrieved value from AWS Secret Manager is not a string.");
     return null;
+  }
+
+  @SneakyThrows
+  private void createSecret(String laShortCode, NotifyProfile notifyProfile) {
+    CreateSecretRequest createSecretRequest = new CreateSecretRequest();
+    String secretName = String.format(LA_NOTIFY_KEY, secretEnv, laShortCode);
+    createSecretRequest.setName(secretName);
+    String json = objectMapper.writeValueAsString(notifyProfile);
+    createSecretRequest.setSecretString(json);
+    Tag tag = new Tag().withKey("Env").withValue(secretEnv);
+    log.debug("Creating secret with key:{}, {}", secretName, notifyProfile);
+    createSecretRequest.setTags(ImmutableSet.of(tag));
+    // Should update if already exists
+    CreateSecretResult secret = awsSecretsManager.createSecret(createSecretRequest);
+    log.info("Created secret:{}", secret);
+  }
+
+  public static void main(String[] args) {
+    AWSSecretsManager awsSecretsManager = AWSSecretsManagerClientBuilder.defaultClient();
+    SecretsManager secretsManager = new SecretsManager(awsSecretsManager, "dev");
+
+    NotifyProfile notifyProfile =
+        NotifyProfile.builder()
+            .apiKey("sje_test")
+            .templates(ImmutableMap.of(TemplateName.APPLICATION_SUBMITTED, "sje_test_template"))
+            .build();
+
+    String laShortCode = "sje_123456";
+    secretsManager.createSecret(laShortCode, notifyProfile);
+
+    NotifyProfile sje_123 = secretsManager.retrieveLANotifyProfile(laShortCode);
+    log.info("Retrieved secret:{}", sje_123);
   }
 }
