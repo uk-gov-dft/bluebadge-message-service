@@ -37,6 +37,7 @@ public class MessageService {
       try {
         return sendLAMessage(messageDetails);
       } catch (FailedLaMessageException e) {
+        log.debug("Failed to send message using LA notify. Reverting to Dft Notify. Error:{}", e.getMessage());
       }
     }
 
@@ -101,17 +102,15 @@ public class MessageService {
 
   private MessageEntity persistMessage(
       MessageDetails messageDetails, UUID messageRef, UUID notifyRef) {
-    MessageEntity entity =
-        MessageEntity.builder()
-            .template(messageDetails.getTemplate().name())
-            .bbbReference(messageRef)
-            .notifyReference(notifyRef)
-            .build();
-    return entity;
+    return MessageEntity.builder()
+        .template(messageDetails.getTemplate().name())
+        .bbbReference(messageRef)
+        .notifyReference(notifyRef)
+        .build();
   }
 
   private class FailedLaMessageException extends RuntimeException {
-    public FailedLaMessageException(String message) {
+    private FailedLaMessageException(String message) {
       super(message);
     }
   }

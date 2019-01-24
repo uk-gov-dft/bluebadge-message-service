@@ -14,11 +14,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class NotifyProfile {
+class NotifyProfile {
   @NotBlank private String apiKey;
   @NotNull private Map<TemplateName, String> templates;
 
-  public String getTemplate(TemplateName templateName) {
+  String getTemplate(TemplateName templateName) {
     return templates.get(templateName);
   }
 }
