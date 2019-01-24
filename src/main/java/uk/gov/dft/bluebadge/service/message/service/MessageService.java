@@ -11,7 +11,7 @@ import uk.gov.dft.bluebadge.common.service.exception.BadRequestException;
 import uk.gov.dft.bluebadge.model.message.generated.MessageDetails;
 import uk.gov.dft.bluebadge.service.message.client.notify.NotifyClient;
 import uk.gov.dft.bluebadge.service.message.client.notify.NotifyTemplates;
-import uk.gov.dft.bluebadge.service.message.repository.MessageRepository;
+
 import uk.gov.dft.bluebadge.service.message.repository.domain.MessageEntity;
 import uk.gov.service.notify.NotificationClientException;
 
@@ -20,35 +20,43 @@ import uk.gov.service.notify.NotificationClientException;
 @Slf4j
 public class MessageService {
 
-  private final MessageRepository repository;
   private final NotifyClient client;
   private final NotifyTemplates dftNotifyTemplates;
   private final SecretsManager secretsManager;
 
   @Autowired
   MessageService(
-      MessageRepository repository,
-      NotifyClient client,
-      NotifyTemplates notifyTemplates,
-      SecretsManager secretsManager) {
-    this.repository = repository;
+      NotifyClient client, NotifyTemplates notifyTemplates, SecretsManager secretsManager) {
     this.client = client;
     this.dftNotifyTemplates = notifyTemplates;
     this.secretsManager = secretsManager;
   }
 
   public MessageEntity sendMessage(MessageDetails messageDetails) {
-    NotifyProfile laNotifyProfile = null;
     if (StringUtils.hasText(messageDetails.getLaShortCode())) {
-      laNotifyProfile = secretsManager.retrieveLANotifyProfile(messageDetails.getLaShortCode());
+      try {
+        return sendLAMessage(messageDetails);
+      } catch (FailedLaMessageException e) {
+      }
     }
+
+    return sendDftMessage(messageDetails);
+  }
+
+  private MessageEntity sendLAMessage(MessageDetails messageDetails) {
+    NotifyProfile laNotifyProfile =
+        secretsManager.retrieveLANotifyProfile(messageDetails.getLaShortCode());
 
     if (null == laNotifyProfile
-        || !laNotifyProfile.getTemplates().containsKey(messageDetails.getTemplate())) {
-      return sendDftMessage(messageDetails);
+        || null == laNotifyProfile.getTemplate(messageDetails.getTemplate())) {
+      log.debug(
+          "No Notify profile found for LA {} and template {}",
+          messageDetails.getLaShortCode(),
+          messageDetails.getTemplate());
+      throw new FailedLaMessageException("No Notify profile found");
     }
 
-    String notifyTemplate = laNotifyProfile.getTemplates().get(messageDetails.getTemplate());
+    String notifyTemplate = laNotifyProfile.getTemplate(messageDetails.getTemplate());
     try {
       UUID messageRef = UUID.randomUUID();
       UUID notifyRef =
@@ -63,7 +71,7 @@ public class MessageService {
           notifyTemplate,
           e.getMessage(),
           e);
-      return sendDftMessage(messageDetails);
+      throw new FailedLaMessageException("Failed to send LA message");
     }
   }
 
@@ -99,8 +107,12 @@ public class MessageService {
             .bbbReference(messageRef)
             .notifyReference(notifyRef)
             .build();
-
-    repository.createMessage(entity);
     return entity;
+  }
+
+  private class FailedLaMessageException extends RuntimeException {
+    public FailedLaMessageException(String message) {
+      super(message);
+    }
   }
 }

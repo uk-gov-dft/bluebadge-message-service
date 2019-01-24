@@ -17,4 +17,8 @@ import lombok.ToString;
 public class NotifyProfile {
   @NotBlank private String apiKey;
   @NotNull private Map<TemplateName, String> templates;
+
+  public String getTemplate(TemplateName templateName) {
+    return templates.get(templateName);
+  }
 }
