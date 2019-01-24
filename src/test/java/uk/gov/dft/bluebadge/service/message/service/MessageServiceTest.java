@@ -49,7 +49,7 @@ public class MessageServiceTest {
   public void sendMessage_dftMessage() {
     when(repository.createMessage(any(MessageEntity.class))).thenReturn(1);
     UUID notifyRef = UUID.randomUUID();
-    when(client.emailMessage(any(), any(), any())).thenReturn(notifyRef);
+    when(client.dftEmailMessage(any(), any(), any())).thenReturn(notifyRef);
     when(notifyTemplates.getNotifyTemplate(TEST_TEMPLATE)).thenReturn("test template");
 
     MessageDetails messageDetails = new MessageDetails();
@@ -66,7 +66,7 @@ public class MessageServiceTest {
     assertThat(result.getTemplate()).isEqualTo(TEST_TEMPLATE.name());
 
     verify(repository).createMessage(any(MessageEntity.class));
-    verify(client).emailMessage("test template", messageDetails, result.getBbbReference());
+    verify(client).dftEmailMessage("test template", messageDetails, result.getBbbReference());
   }
 
   @Test
@@ -74,7 +74,7 @@ public class MessageServiceTest {
   public void sendMessage_laMessage() {
     when(repository.createMessage(any(MessageEntity.class))).thenReturn(1);
     UUID notifyRef = UUID.randomUUID();
-    when(client.emailMessage(any(), any(), any(), any())).thenReturn(notifyRef);
+    when(client.laEmailMessage(any(), any(), any(), any())).thenReturn(notifyRef);
     when(secretsManager.retrieveLANotifyProfile("SOME_LA")).thenReturn(testNotifyProfile);
 
     MessageDetails messageDetails = new MessageDetails();
@@ -92,9 +92,9 @@ public class MessageServiceTest {
 
     verify(repository).createMessage(any(MessageEntity.class));
     verifyZeroInteractions(notifyTemplates);
-    verify(client, never()).emailMessage(any(), any(), any());
+    verify(client, never()).dftEmailMessage(any(), any(), any());
     verify(client)
-        .emailMessage(
+        .laEmailMessage(
             eq("la notify api key"), eq("la notify template id"), eq(messageDetails), any());
   }
 
@@ -102,10 +102,10 @@ public class MessageServiceTest {
   @SneakyThrows
   public void sendMessage_whenErrorInLAMessage_thenDftMessageSent() {
     when(repository.createMessage(any(MessageEntity.class))).thenReturn(1);
-    when(client.emailMessage(any(), any(), any(), any()))
+    when(client.laEmailMessage(any(), any(), any(), any()))
         .thenThrow(new RuntimeException("test error"));
     UUID notifyRef = UUID.randomUUID();
-    when(client.emailMessage(any(), any(), any())).thenReturn(notifyRef);
+    when(client.dftEmailMessage(any(), any(), any())).thenReturn(notifyRef);
     when(notifyTemplates.getNotifyTemplate(TEST_TEMPLATE)).thenReturn("test template");
     when(secretsManager.retrieveLANotifyProfile("SOME_LA")).thenReturn(testNotifyProfile);
 
@@ -124,9 +124,9 @@ public class MessageServiceTest {
 
     verify(repository).createMessage(any(MessageEntity.class));
     verify(client)
-        .emailMessage(
+        .laEmailMessage(
             eq("la notify api key"), eq("la notify template id"), eq(messageDetails), any());
-    verify(client).emailMessage(eq("test template"), eq(messageDetails), any());
+    verify(client).dftEmailMessage(eq("test template"), eq(messageDetails), any());
   }
 
   // Should never happen due to validation on start up.

@@ -49,7 +49,7 @@ public class NotifyClientTest {
         .thenReturn(mockResponse);
     when(mockResponse.getNotificationId()).thenReturn(notifyRef);
 
-    UUID confirmationRef = notifyClient.emailMessage("notify template id", messageDetails, ourRef);
+    UUID confirmationRef = notifyClient.dftEmailMessage("notify template id", messageDetails, ourRef);
     assertThat(confirmationRef).isEqualTo(notifyRef);
 
     verify(mockClient)
@@ -69,7 +69,7 @@ public class NotifyClientTest {
 
     messageDetails.setTemplate(TemplateName.NEW_USER);
     try {
-      notifyClient.emailMessage("template id", messageDetails, ourRef);
+      notifyClient.dftEmailMessage("template id", messageDetails, ourRef);
       fail("No exception thrown");
     } catch (NotificationClientException e) {
       assertThat(e).isSameAs(clientException);

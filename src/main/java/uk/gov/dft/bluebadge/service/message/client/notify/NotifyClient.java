@@ -20,7 +20,7 @@ public class NotifyClient {
     this.dftClient = client;
   }
 
-  public UUID emailMessage(
+  public UUID laEmailMessage(
       String notifyApiKey, String notifyTemplate, MessageDetails messageDetails, UUID messageRef)
       throws NotificationClientException {
     log.info(
@@ -33,7 +33,7 @@ public class NotifyClient {
     return emailMessage(client, notifyTemplate, messageDetails, messageRef);
   }
 
-  public UUID emailMessage(String notifyTemplate, MessageDetails messageDetails, UUID messageRef)
+  public UUID dftEmailMessage(String notifyTemplate, MessageDetails messageDetails, UUID messageRef)
       throws NotificationClientException {
     log.info(
         "Sending an email message to DFT Notify. Template name:{}, Notify Template:{}, BB Ref:{}",

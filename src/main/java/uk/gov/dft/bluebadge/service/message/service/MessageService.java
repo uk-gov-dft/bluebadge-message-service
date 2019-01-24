@@ -52,7 +52,7 @@ public class MessageService {
     try {
       UUID messageRef = UUID.randomUUID();
       UUID notifyRef =
-          client.emailMessage(
+          client.laEmailMessage(
               laNotifyProfile.getApiKey(), notifyTemplate, messageDetails, messageRef);
       log.info("Successfully sent LA message. BB Ref:{}, Notify ref:{}", messageRef, notifyRef);
       return persistMessage(messageDetails, messageRef, notifyRef);
@@ -79,7 +79,7 @@ public class MessageService {
 
     try {
       UUID messageRef = UUID.randomUUID();
-      UUID notifyRef = client.emailMessage(notifyTemplate, messageDetails, messageRef);
+      UUID notifyRef = client.dftEmailMessage(notifyTemplate, messageDetails, messageRef);
       log.info("Successfully sent LA message. BB Ref:{}, Notify ref:{}", messageRef, notifyRef);
 
       return persistMessage(messageDetails, messageRef, notifyRef);
