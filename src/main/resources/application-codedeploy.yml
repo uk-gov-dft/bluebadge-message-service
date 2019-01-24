@@ -20,6 +20,8 @@ management:
       exposure:
         include: '*'
 spring:
+  main:
+    banner-mode: "off"
   datasource:
      ***REMOVED***
     username: ${bb_db_username:-developer}
