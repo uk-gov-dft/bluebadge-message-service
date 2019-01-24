@@ -5,7 +5,6 @@ import com.amazonaws.services.secretsmanager.model.GetSecretValueRequest;
 import com.amazonaws.services.secretsmanager.model.GetSecretValueResult;
 import com.amazonaws.services.secretsmanager.model.InvalidParameterException;
 import com.amazonaws.services.secretsmanager.model.InvalidRequestException;
-import com.amazonaws.services.secretsmanager.model.ListSecretsRequest;
 import com.amazonaws.services.secretsmanager.model.ResourceNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
@@ -48,7 +47,6 @@ public class SecretsManager {
         new GetSecretValueRequest().withSecretId(secretName);
     GetSecretValueResult getSecretValueResult = null;
     try {
-      awsSecretsManager.listSecrets(new ListSecretsRequest());
       getSecretValueResult = awsSecretsManager.getSecretValue(getSecretValueRequest);
     } catch (ResourceNotFoundException e) {
       log.debug("The requested secret " + secretName + " was not found");

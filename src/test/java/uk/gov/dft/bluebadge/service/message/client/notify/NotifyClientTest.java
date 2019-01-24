@@ -49,7 +49,8 @@ public class NotifyClientTest {
         .thenReturn(mockResponse);
     when(mockResponse.getNotificationId()).thenReturn(notifyRef);
 
-    UUID confirmationRef = notifyClient.dftEmailMessage("notify template id", messageDetails, ourRef);
+    UUID confirmationRef =
+        notifyClient.dftEmailMessage("notify template id", messageDetails, ourRef);
     assertThat(confirmationRef).isEqualTo(notifyRef);
 
     verify(mockClient)
