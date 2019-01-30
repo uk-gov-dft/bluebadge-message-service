@@ -103,6 +103,7 @@ dependencies {
     compile group: 'org.springframework.cloud', name: 'spring-cloud-starter-sleuth', version: '2.0.1.RELEASE'
     compile('org.postgresql:postgresql:42.2.2')
     compile 'uk.gov.service.notify:notifications-java-client:3.9.2-RELEASE'
+    compile 'com.amazonaws:aws-java-sdk-secretsmanager:1.11.484'
 
     compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.8.0'
     compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.8.0'

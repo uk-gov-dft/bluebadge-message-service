@@ -5,7 +5,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(
   classes = MessageServiceApplication.class,
-  properties = {"management.server.port=19991"}
+  properties = {"management.server.port=0"}
 )
 @ActiveProfiles({"test", "dev"})
 public abstract class ApplicationContextTests {}

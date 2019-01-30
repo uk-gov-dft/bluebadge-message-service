@@ -3,7 +3,7 @@ package uk.gov.dft.bluebadge.service.message.client.notify;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Fail.fail;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -15,8 +15,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import uk.gov.dft.bluebadge.common.service.exception.BadRequestException;
 import uk.gov.dft.bluebadge.model.message.generated.MessageDetails;
+import uk.gov.dft.bluebadge.service.message.service.TemplateName;
 import uk.gov.service.notify.NotificationClient;
 import uk.gov.service.notify.NotificationClientException;
 import uk.gov.service.notify.SendEmailResponse;
@@ -25,7 +25,6 @@ import uk.gov.service.notify.SendEmailResponse;
 public class NotifyClientTest {
 
   @Mock private NotificationClient mockClient;
-  @Mock private NotifyTemplates mockTemplates;
   @Mock private SendEmailResponse mockResponse;
   private NotifyClient notifyClient;
   private MessageDetails messageDetails;
@@ -33,9 +32,9 @@ public class NotifyClientTest {
 
   @Before
   public void setup() {
-    notifyClient = new NotifyClient(mockClient, mockTemplates);
+    notifyClient = new NotifyClient(mockClient);
     messageDetails = new MessageDetails();
-    messageDetails.setTemplate("TEST_TEMPLATE_1");
+    messageDetails.setTemplate(TemplateName.NEW_USER);
     messageDetails.setEmailAddress("bob@bob.com");
     messageAttributes = ImmutableMap.of("name", "bob");
     messageDetails.setAttributes(messageAttributes);
@@ -46,54 +45,39 @@ public class NotifyClientTest {
   public void whenAllOk_thenMessageSent() {
     UUID ourRef = UUID.randomUUID();
     UUID notifyRef = UUID.randomUUID();
-    when(mockTemplates.getNotifyTemplate("TEST_TEMPLATE_1")).thenReturn("notify_template");
-    when(mockClient.sendEmail(any(), any(), any(), any())).thenReturn(mockResponse);
+    when(mockClient.sendEmail(eq("notify template id"), any(), any(), any()))
+        .thenReturn(mockResponse);
     when(mockResponse.getNotificationId()).thenReturn(notifyRef);
 
-    UUID confirmationRef = notifyClient.emailMessage(messageDetails, ourRef);
+    UUID confirmationRef =
+        notifyClient.dftEmailMessage("notify template id", messageDetails, ourRef);
     assertThat(confirmationRef).isEqualTo(notifyRef);
 
     verify(mockClient)
         .sendEmail(
-            "notify_template",
+            "notify template id",
             messageDetails.getEmailAddress(),
             messageAttributes,
             ourRef.toString());
-  }
-
-  @SneakyThrows
-  @Test(expected = BadRequestException.class)
-  public void whenUnknownTemplate_thenException() {
-    UUID uuid = UUID.randomUUID();
-    messageDetails.setTemplate("not a valid template");
-    notifyClient.emailMessage(messageDetails, uuid);
-    verify(mockClient, never()).sendEmail(any(), any(), any(), any());
   }
 
   @SneakyThrows
   @Test
   public void whenNotifyException_thenException() {
     UUID ourRef = UUID.randomUUID();
-    when(mockTemplates.getNotifyTemplate("TEST_TEMPLATE_1")).thenReturn("notify_template");
-    when(mockClient.sendEmail(any(), any(), any(), any()))
-        .thenThrow(new NotificationClientException("Notify no like"));
+    NotificationClientException clientException = new NotificationClientException("Notify no like");
+    when(mockClient.sendEmail(any(), any(), any(), any())).thenThrow(clientException);
 
-    messageDetails.setTemplate("TEST_TEMPLATE_1");
+    messageDetails.setTemplate(TemplateName.NEW_USER);
     try {
-      notifyClient.emailMessage(messageDetails, ourRef);
+      notifyClient.dftEmailMessage("template id", messageDetails, ourRef);
       fail("No exception thrown");
-    } catch (BadRequestException e) {
-      assertThat(e.getResponse()).isNotNull();
-      assertThat(e.getResponse().getBody()).isNotNull();
-      assertThat(e.getResponse().getBody().getError()).isNotNull();
-      assertThat(e.getResponse().getBody().getError().getMessage()).contains("Notify no like");
+    } catch (NotificationClientException e) {
+      assertThat(e).isSameAs(clientException);
     }
 
     verify(mockClient)
         .sendEmail(
-            "notify_template",
-            messageDetails.getEmailAddress(),
-            messageAttributes,
-            ourRef.toString());
+            "template id", messageDetails.getEmailAddress(), messageAttributes, ourRef.toString());
   }
 }
