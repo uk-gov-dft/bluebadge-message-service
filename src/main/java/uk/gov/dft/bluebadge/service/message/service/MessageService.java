@@ -11,7 +11,6 @@ import uk.gov.dft.bluebadge.common.service.exception.BadRequestException;
 import uk.gov.dft.bluebadge.model.message.generated.MessageDetails;
 import uk.gov.dft.bluebadge.service.message.client.notify.NotifyClient;
 import uk.gov.dft.bluebadge.service.message.client.notify.NotifyTemplates;
-
 import uk.gov.dft.bluebadge.service.message.repository.domain.MessageEntity;
 import uk.gov.service.notify.NotificationClientException;
 
@@ -37,7 +36,9 @@ public class MessageService {
       try {
         return sendLAMessage(messageDetails);
       } catch (FailedLaMessageException e) {
-        log.debug("Failed to send message using LA notify. Reverting to Dft Notify. Error:{}", e.getMessage());
+        log.debug(
+            "Failed to send message using LA notify. Reverting to Dft Notify. Error:{}",
+            e.getMessage());
       }
     }
 
