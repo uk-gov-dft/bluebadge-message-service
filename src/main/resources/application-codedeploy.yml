@@ -4,6 +4,7 @@ blue-badge:
     client-id: bb_user_management_id
      ***REMOVED***
   notify:
+    secretEnv: ${bb_env}
      ***REMOVED***
     templates:
       NEW_USER: a364e3cb-a72b-41fa-b28f-e7317525d028
