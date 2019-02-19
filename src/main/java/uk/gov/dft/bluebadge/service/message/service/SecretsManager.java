@@ -37,6 +37,7 @@ public class SecretsManager {
 
   public NotifyProfile retrieveLANotifyProfile(String la) {
     Assert.hasText(la, "LA short code is not set");
+    log.info("Fetching Notify profile keys for LA:{}", la);
     return getSecret(String.format(LA_NOTIFY_KEY, secretEnv, la));
   }
 
