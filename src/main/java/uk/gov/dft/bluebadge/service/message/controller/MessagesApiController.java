@@ -1,4 +1,4 @@
-package uk.gov.dft.bluebadge.service.message;
+package uk.gov.dft.bluebadge.service.message.controller;
 
 import io.swagger.annotations.ApiParam;
 import javax.validation.Valid;
