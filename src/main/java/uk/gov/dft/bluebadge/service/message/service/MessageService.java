@@ -90,7 +90,7 @@ public class MessageService {
     try {
       UUID messageRef = UUID.randomUUID();
       UUID notifyRef = client.dftEmailMessage(notifyTemplate, messageDetails, messageRef);
-      log.info("Successfully sent LA message. BB Ref:{}, Notify ref:{}", messageRef, notifyRef);
+      log.info("Successfully sent DFT message. BB Ref:{}, Notify ref:{}", messageRef, notifyRef);
 
       return persistMessage(messageDetails, messageRef, notifyRef);
     } catch (NotificationClientException e) {

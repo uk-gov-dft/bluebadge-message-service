@@ -1,4 +1,4 @@
-package uk.gov.dft.bluebadge.service.message;
+package uk.gov.dft.bluebadge.service.message.controller;
 
 import io.swagger.annotations.ApiParam;
 import javax.validation.Valid;
@@ -17,13 +17,13 @@ import uk.gov.dft.bluebadge.service.message.service.MessageService;
 
 @RestController
 @Slf4j
-public class MessagesApiControllerImpl extends AbstractController implements MessagesApi {
+public class MessagesApiController extends AbstractController implements MessagesApi {
 
   private MessageService service;
 
   @SuppressWarnings("unused")
   @Autowired
-  public MessagesApiControllerImpl(MessageService service) {
+  public MessagesApiController(MessageService service) {
     this.service = service;
   }
 
