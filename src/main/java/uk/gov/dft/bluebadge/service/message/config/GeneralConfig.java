@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.Validator;
 import org.springframework.validation.annotation.Validated;
+import uk.gov.dft.bluebadge.common.logging.LoggingAspect;
 import uk.gov.dft.bluebadge.service.message.client.notify.NotifyTemplates;
 import uk.gov.dft.bluebadge.service.message.client.notify.NotifyTemplatesValidator;
 import uk.gov.service.notify.NotificationClient;
@@ -31,4 +32,10 @@ public class GeneralConfig {
   public static Validator configurationPropertiesValidator() {
     return new NotifyTemplatesValidator();
   }
+
+  @Bean
+  LoggingAspect getControllerLoggingAspect() {
+    return new LoggingAspect();
+  }
+
 }
