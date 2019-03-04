@@ -8,8 +8,8 @@
         (template, bbb_reference, notify_reference)
         VALUES (
         #{template},
-        #{bbbReference,javaType=java.util.UUID,jdbcType=OTHER,typeHandler=uk.gov.dft.bluebadge.service.message.repository.UuidTypeHandler},
-        #{notifyReference,javaType=java.util.UUID,jdbcType=OTHER,typeHandler=uk.gov.dft.bluebadge.service.message.repository.UuidTypeHandler}
+        #{bbbReference,javaType=java.util.UUID,jdbcType=OTHER,typeHandler=uk.gov.dft.bluebadge.common.repository.UuidTypeHandler},
+        #{notifyReference,javaType=java.util.UUID,jdbcType=OTHER,typeHandler=uk.gov.dft.bluebadge.common.repository.UuidTypeHandler}
         )
     </insert>
 
