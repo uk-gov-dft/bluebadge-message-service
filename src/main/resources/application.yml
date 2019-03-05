@@ -30,7 +30,7 @@ management:
 
 mybatis:
   type-aliases-package: uk.gov.dft.bluebadge.service.message.repository.domain
-  type-handlers-package: uk.gov.dft.bluebadge.service.message.repository
+  type-handlers-package: uk.gov.dft.bluebadge.common.repository
 
 spring:
   datasource:
