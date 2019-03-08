@@ -13,9 +13,16 @@ Feature: Verify messages create
     Then status 200
     And match $.data contains {uuid:"#notnull"}
 
-  Scenario: Bad request for unknown template
+  Scenario: Bad request for cannot deserialize invalid enum
     Given path 'messages'
     And request {template: "TEST_TEMPLATE_1", emailAddress:"a@b.com", attributes:{name:"bob", age:2}}
     When method POST
     Then status 400
-    And match $.error contains {message:"InvalidFormat.TemplateName"}
+    And match $.error.errors contains {"field":"template","reason":"`TEST_TEMPLATE_1` is not one of the expected values; [NEW_USER, RESET_PASSWORD, PASSWORD_RESET_SUCCESS, APPLICATION_SUBMITTED].","message":"InvalidFormat.template","location":null,"locationType":null}
+
+  Scenario: Bad request for bean validation
+    Given path 'messages'
+    And request {template: "NEW_USER", emailAddress: null, attributes:{name:"bob", age:2}}
+    When method POST
+    Then status 400
+    And match $.error.errors contains {"field":"emailAddress","reason":"must not be null","message":"NotNull.messageDetails.emailAddress","location":null,"locationType":null}

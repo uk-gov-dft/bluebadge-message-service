@@ -87,7 +87,7 @@ tasks.withType(Pmd) {
 }
 
 dependencies {
-    ext.commonVersion = '0.6.8-SNAPSHOT'
+    ext.commonVersion = '0.6.18-SNAPSHOT'
 
     compile( group: 'uk.gov.dft.bluebadge', name: 'bluebadge-common', version: "${commonVersion}", changing: true ){
         exclude group: 'org.mybatis.spring.boot', module: 'mybatis-spring-boot-starter'
@@ -111,6 +111,7 @@ dependencies {
     compileOnly ('org.projectlombok:lombok:1.16.22')
     
     runtime('org.springframework.boot:spring-boot-devtools')
+    runtime group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '5.2'
     runtime group: 'ch.qos.logback.contrib', name: 'logback-json-classic', version: '0.1.5'
     runtime group: 'ch.qos.logback.contrib', name: 'logback-jackson', version: '0.1.5'
     runtime group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.3'
