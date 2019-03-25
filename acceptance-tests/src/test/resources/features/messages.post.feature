@@ -18,4 +18,4 @@ Feature: Verify messages create
     And request {template: "TEST_TEMPLATE_1", emailAddress:"a@b.com", attributes:{name:"bob", age:2}}
     When method POST
     Then status 400
-    And match $.error contains {message:"InvalidFormat.template"}
+    And match $.error.errors contains {   "field": "template",  "reason": "`RESET_PASSWORDA` is not one of the expected values; [NEW_USER, RESET_PASSWORD, PASSWORD_RESET_SUCCESS, APPLICATION_SUBMITTED].","message": "InvalidFormat.template", "location": null, "locationType": null }
