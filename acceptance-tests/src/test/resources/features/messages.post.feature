@@ -18,4 +18,4 @@ Feature: Verify messages create
     And request {template: "TEST_TEMPLATE_1", emailAddress:"a@b.com", attributes:{name:"bob", age:2}}
     When method POST
     Then status 400
-    And match $.error contains {message:"InvalidFormat.TemplateName"}
+    And match $.error contains {message:"InvalidFormat.template"}
