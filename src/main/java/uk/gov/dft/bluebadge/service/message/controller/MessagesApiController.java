@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.dft.bluebadge.common.controller.AbstractController;
+import uk.gov.dft.bluebadge.common.api.CommonResponseEntityExceptionHandler;
 import uk.gov.dft.bluebadge.model.message.generated.MessageDetails;
 import uk.gov.dft.bluebadge.model.message.generated.UuidResponse;
 import uk.gov.dft.bluebadge.model.message.generated.UuidResponseData;
@@ -17,7 +17,8 @@ import uk.gov.dft.bluebadge.service.message.service.MessageService;
 
 @RestController
 @Slf4j
-public class MessagesApiController extends AbstractController implements MessagesApi {
+public class MessagesApiController extends CommonResponseEntityExceptionHandler
+    implements MessagesApi {
 
   private MessageService service;
 
