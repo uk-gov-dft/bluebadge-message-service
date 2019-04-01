@@ -4,7 +4,9 @@ blue-badge:
   notify:
     secretEnv: ${bb_env}
      ***REMOVED***
-
+  referencedataservice:
+    servicehost:
+      host: referencedata-service
 spring:
   main:
     banner-mode: "off"

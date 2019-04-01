@@ -10,6 +10,11 @@ blue-badge:
       NEW_USER: a364e3cb-a72b-41fa-b28f-e7317525d028
       RESET_PASSWORD: 2ee75a54-8adc-41aa-ac06-5dfd724f48cb
       PASSWORD_RESET_SUCCESS: ea020bfb-cde8-4605-8726-248a38cc6bf2
+  reference-data-service:
+    service-host:
+      host: reference-service.${bb_env}.${url}
+      port: 443
+      scheme: https
 
 management:
   server:

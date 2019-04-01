@@ -28,7 +28,7 @@ public class MessageServiceTest {
 
   @Mock private NotifyClient client;
   @Mock private NotifyTemplates notifyTemplates;
-  @Mock private SecretsManager secretsManager;
+  @Mock private NotifySecretsManager secretsManager;
   private NotifyProfile testNotifyProfile;
 
   @Before

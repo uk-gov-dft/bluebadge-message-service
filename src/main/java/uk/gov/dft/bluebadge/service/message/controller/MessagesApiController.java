@@ -4,6 +4,9 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.dft.bluebadge.model.message.generated.MessageDetails;
@@ -12,6 +15,7 @@ import uk.gov.dft.bluebadge.model.message.generated.UuidResponseData;
 import uk.gov.dft.bluebadge.service.message.generated.controller.MessagesApi;
 import uk.gov.dft.bluebadge.service.message.repository.domain.MessageEntity;
 import uk.gov.dft.bluebadge.service.message.service.MessageService;
+import uk.gov.dft.bluebadge.service.message.service.NotifyProfile;
 
 import javax.validation.Valid;
 
@@ -40,5 +44,13 @@ public class MessagesApiController implements MessagesApi {
     data.setUuid(messageEntity.getBbbReference().toString());
     response.setData(data);
     return ResponseEntity.ok(response);
+  }
+
+  @PostMapping("/localAuthorities/{laShortCode}")
+  @PreAuthorize("hasAuthority('UPDATE_NOTIFY_LA_SECRET') and @securityUtils.isAuthorisedLACode(#laShortCode)")
+  public ResponseEntity<Void> updateLocalNotifySecret(
+      @Valid @RequestBody NotifyProfile profile, @PathVariable String laShortCode) {
+    service.createOrUpdateNotifyProfile(laShortCode.toUpperCase(), profile);
+    return ResponseEntity.ok().build();
   }
 }

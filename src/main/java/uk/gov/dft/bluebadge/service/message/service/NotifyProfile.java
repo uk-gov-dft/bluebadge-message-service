@@ -14,7 +14,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-class NotifyProfile {
+public class NotifyProfile {
   @NotBlank private String apiKey;
   @NotNull private Map<TemplateName, String> templates;
 
