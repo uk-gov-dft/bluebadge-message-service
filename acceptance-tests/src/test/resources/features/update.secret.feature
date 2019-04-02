@@ -108,7 +108,7 @@ Feature: Verify creating and updating gov pay secret
     And request {templates: {"APPLICATION_SUBMITTED":"la admin"}}
     When method POST
     Then status 400
-    And match $.error.errors[0].message contains 'Invalid.laShortCode'
+    And match $.error.message contains 'Invalid.laShortCode'
 
   Scenario: Invalid Template name
     * def result = callonce read('./oauth2-shrop-la-admin.feature')
