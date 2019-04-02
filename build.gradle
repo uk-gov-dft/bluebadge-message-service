@@ -111,6 +111,7 @@ dependencies {
     compileOnly ('org.projectlombok:lombok:1.16.22')
     
     runtime('org.springframework.boot:spring-boot-devtools')
+    runtime group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '5.2'
     runtime group: 'ch.qos.logback.contrib', name: 'logback-json-classic', version: '0.1.5'
     runtime group: 'ch.qos.logback.contrib', name: 'logback-jackson', version: '0.1.5'
     runtime group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.3'

@@ -1,13 +1,11 @@
 package uk.gov.dft.bluebadge.service.message.controller;
 
 import io.swagger.annotations.ApiParam;
-import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.dft.bluebadge.common.api.CommonResponseEntityExceptionHandler;
 import uk.gov.dft.bluebadge.model.message.generated.MessageDetails;
 import uk.gov.dft.bluebadge.model.message.generated.UuidResponse;
 import uk.gov.dft.bluebadge.model.message.generated.UuidResponseData;
@@ -15,10 +13,11 @@ import uk.gov.dft.bluebadge.service.message.generated.controller.MessagesApi;
 import uk.gov.dft.bluebadge.service.message.repository.domain.MessageEntity;
 import uk.gov.dft.bluebadge.service.message.service.MessageService;
 
+import javax.validation.Valid;
+
 @RestController
 @Slf4j
-public class MessagesApiController extends CommonResponseEntityExceptionHandler
-    implements MessagesApi {
+public class MessagesApiController implements MessagesApi {
 
   private MessageService service;
 
