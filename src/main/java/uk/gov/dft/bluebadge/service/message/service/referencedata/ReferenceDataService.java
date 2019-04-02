@@ -1,5 +1,8 @@
 package uk.gov.dft.bluebadge.service.message.service.referencedata;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -11,11 +14,6 @@ import org.springframework.web.context.WebApplicationContext;
 import uk.gov.dft.bluebadge.service.message.client.referencedataservice.ReferenceDataApiClient;
 import uk.gov.dft.bluebadge.service.message.client.referencedataservice.model.LocalAuthorityRefData;
 import uk.gov.dft.bluebadge.service.message.client.referencedataservice.model.ReferenceData;
-
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Component
 @Slf4j

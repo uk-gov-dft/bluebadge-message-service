@@ -1,5 +1,6 @@
 package uk.gov.dft.bluebadge.service.message.client.referencedataservice;
 
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -8,8 +9,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import uk.gov.dft.bluebadge.service.message.client.referencedataservice.model.ReferenceData;
 import uk.gov.dft.bluebadge.service.message.client.referencedataservice.model.ReferenceDataResponse;
-
-import java.util.List;
 
 @Slf4j
 @Service

@@ -1,10 +1,9 @@
 package uk.gov.dft.bluebadge.service.message.service;
 
 import java.util.Map;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -14,11 +13,16 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class NotifyProfile {
-  @NotBlank private String apiKey;
-  @NotNull private Map<TemplateName, String> templates;
+  private String apiKey;
+  private Map<TemplateName, String> templates;
 
   String getTemplate(TemplateName templateName) {
+    if (null == templates) {
+      return null;
+    }
+
     return templates.get(templateName);
   }
 }

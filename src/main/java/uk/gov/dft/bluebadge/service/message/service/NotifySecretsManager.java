@@ -37,7 +37,7 @@ public class NotifySecretsManager {
     secretsAdapter.createOrUpdateSecret(formatSecretKey(laShortCode), profile);
   }
 
-  private String formatSecretKey(String laShortCode){
+  private String formatSecretKey(String laShortCode) {
     return String.format(LA_NOTIFY_KEY, secretEnv, laShortCode.toUpperCase());
   }
 }

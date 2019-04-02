@@ -1,7 +1,11 @@
 package uk.gov.dft.bluebadge.service.message.service;
 
+import static org.springframework.util.StringUtils.hasText;
+
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,11 +20,6 @@ import uk.gov.dft.bluebadge.service.message.repository.domain.MessageEntity;
 import uk.gov.dft.bluebadge.service.message.service.referencedata.ReferenceDataService;
 import uk.gov.service.notify.NotificationClientException;
 
-import java.util.Set;
-import java.util.UUID;
-
-import static org.springframework.util.StringUtils.hasText;
-
 @Service
 @Transactional
 @Slf4j
@@ -33,7 +32,10 @@ public class MessageService {
 
   @Autowired
   MessageService(
-      NotifyClient client, NotifyTemplates notifyTemplates, NotifySecretsManager secretsManager, ReferenceDataService referenceDataService) {
+      NotifyClient client,
+      NotifyTemplates notifyTemplates,
+      NotifySecretsManager secretsManager,
+      ReferenceDataService referenceDataService) {
     this.client = client;
     this.dftNotifyTemplates = notifyTemplates;
     this.secretsManager = secretsManager;
@@ -132,32 +134,49 @@ public class MessageService {
   public void createOrUpdateNotifyProfile(String laShortCode, NotifyProfile newProfile) {
     if (null == referenceDataService.getLocalAuthority(laShortCode)) {
       String reason = laShortCode + " is not a recognised Local Authority short code.";
-      throw new BadRequestException(new Error().message("laShortCode").reason(reason));
+      throw new BadRequestException(new Error().message("Invalid.laShortCode").reason(reason));
     }
 
-    try{
+    try {
       NotifyProfile oldProfile = secretsManager.retrieveLANotifyProfile(laShortCode);
       log.debug("Updating existing notify profile for {}.", laShortCode);
-      secretsManager.createOrUpdateNotifyProfile(laShortCode, mergeNotifyProfiles(oldProfile, newProfile));
-    }catch (NotFoundException e){
+      secretsManager.createOrUpdateNotifyProfile(
+          laShortCode, mergeNotifyProfiles(oldProfile, newProfile));
+    } catch (NotFoundException e) {
       log.debug("Creating new notify profile for {}.", laShortCode);
       secretsManager.createOrUpdateNotifyProfile(laShortCode, newProfile);
     }
-
   }
 
-  private NotifyProfile mergeNotifyProfiles(NotifyProfile oldProfile, NotifyProfile newProfile) {
-    if(null == oldProfile){
+  NotifyProfile mergeNotifyProfiles(NotifyProfile oldProfile, NotifyProfile newProfile) {
+    if (null == oldProfile) {
       return newProfile;
     }
 
+    if (null == newProfile) {
+      return oldProfile;
+    }
+
     NotifyProfile.NotifyProfileBuilder builder = NotifyProfile.builder();
-    builder.apiKey(hasText(newProfile.getApiKey()) ? newProfile.getApiKey() : oldProfile.getApiKey());
-    Set<TemplateName> templateKeys =
-        ImmutableSet.<TemplateName>builder().addAll(newProfile.getTemplates().keySet()).addAll(oldProfile.getTemplates().keySet()).build();
+    builder.apiKey(
+        hasText(newProfile.getApiKey()) ? newProfile.getApiKey() : oldProfile.getApiKey());
+
+    // A set of all templates either in AWS or in request.
+    Set<TemplateName> templateKeys = new HashSet<>();
+    if (newProfile.getTemplates() != null && !newProfile.getTemplates().isEmpty()) {
+      templateKeys.addAll(newProfile.getTemplates().keySet());
+    }
+    if (oldProfile.getTemplates() != null && !oldProfile.getTemplates().isEmpty()) {
+      templateKeys.addAll(oldProfile.getTemplates().keySet());
+    }
+
     ImmutableMap.Builder<TemplateName, String> mapBuilder = ImmutableMap.builder();
     for (TemplateName templateName : templateKeys) {
-      mapBuilder.put(templateName, hasText(newProfile.getTemplate(templateName)) ? newProfile.getTemplate(templateName) : oldProfile.getTemplate(templateName));
+      mapBuilder.put(
+          templateName,
+          hasText(newProfile.getTemplate(templateName))
+              ? newProfile.getTemplate(templateName)
+              : oldProfile.getTemplate(templateName));
     }
     return builder.templates(mapBuilder.build()).build();
   }

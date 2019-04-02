@@ -2,13 +2,12 @@ package uk.gov.dft.bluebadge.service.message.client.referencedataservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Optional;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 @Data
 @ToString(callSuper = true)

@@ -1,10 +1,9 @@
 package uk.gov.dft.bluebadge.service.message.client.referencedataservice.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import lombok.EqualsAndHashCode;
 import uk.gov.dft.bluebadge.common.api.model.CommonResponse;
-
-import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 public class ReferenceDataResponse extends CommonResponse {
