@@ -11,6 +11,14 @@ blue-badge:
       RESET_PASSWORD: 2ee75a54-8adc-41aa-ac06-5dfd724f48cb
       PASSWORD_RESET_SUCCESS: ea020bfb-cde8-4605-8726-248a38cc6bf2
       APPLICATION_SUBMITTED: e24af96c-1534-4c1e-81ad-74f2e7d9305a
+  reference-data-service:
+    service-host:
+      host: localhost
+      port: 8580
+      scheme: http
+      connectiontimeout: 6000
+      requesttimeout: 6000
+      contextpath: /uk-gov-dft/reference-data-service/1.0.0
 
 logging:
   level:

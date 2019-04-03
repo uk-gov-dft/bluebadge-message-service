@@ -3,7 +3,7 @@
   "info" : {
     "title" : "MessageService API",
     "description" : "Manage messages",
-    "version" : "1.0.0"
+    "version" : "1.0.1"
   },
   "schemes" : [ "https", "http" ],
   "produces" : [ "application/json" ],
@@ -36,9 +36,49 @@
           }
         }
       }
+    },
+    "/messages/localAuthorities/{laShortCode}" : {
+      "post" : {
+        "parameters" : [ {
+          "name" : "profile",
+          "in" : "body",
+          "schema" : {
+            "$ref" : "#/definitions/NotifyProfile"
+          }
+        }, {
+          "in" : "path",
+          "name" : "laShortCode",
+          "description" : "Local Authority short code",
+          "type" : "string",
+          "required" : true
+        } ],
+        "description" : "Update secret for a Local Authority",
+        "tags" : [ "Messages" ],
+        "operationId" : "updateLocalAuthoritySecret",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "ok."
+          }
+        }
+      }
     }
   },
   "definitions" : {
+    "NotifyProfile" : {
+      "type" : "object",
+      "properties" : {
+        "apiKey" : {
+          "type" : "string",
+          "description" : "Notify API key"
+        },
+        "templates" : {
+          "type" : "object",
+          "description" : "Map of template key values. Possible key values are currently APPLICATION_SUBMITTED, NEW_USER, RESET_PASSWORD and PASSWORD_RESET_SUCCESS.  If a request is sent with an invalid key the 400 response will list the possible values.",
+          "additionalProperties" : true
+        }
+      }
+    },
     "MessageDetails" : {
       "type" : "object",
       "required" : [ "template", "emailAddress" ],
