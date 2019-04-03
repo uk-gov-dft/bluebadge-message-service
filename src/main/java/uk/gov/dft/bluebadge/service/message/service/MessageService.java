@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import uk.gov.dft.bluebadge.common.api.model.Error;
 import uk.gov.dft.bluebadge.common.service.exception.BadRequestException;
 import uk.gov.dft.bluebadge.common.service.exception.NotFoundException;
@@ -132,6 +133,9 @@ public class MessageService {
   }
 
   public void createOrUpdateNotifyProfile(String laShortCode, NotifyProfile newProfile) {
+    Assert.notNull(laShortCode, "La required.");
+    Assert.notNull(newProfile, "New profile required.");
+    
     if (null == referenceDataService.getLocalAuthority(laShortCode)) {
       String reason = laShortCode + " is not a recognised Local Authority short code.";
       throw new BadRequestException(new Error().message("Invalid.laShortCode").reason(reason));
