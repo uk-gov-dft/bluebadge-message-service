@@ -233,7 +233,7 @@ public class MessageServiceTest {
   @Test(expected = BadRequestException.class)
   public void createOrUpdateNotifyProfile_invalidLa() {
     when(mockReferenceDataService.getLocalAuthority("SHROP")).thenReturn(null);
-    service.createOrUpdateNotifyProfile("SHROP", newProfile);
+    service.createOrUpdateNotifyProfile("SHROP", NotifyProfile.builder().build());
   }
 
   @Test
