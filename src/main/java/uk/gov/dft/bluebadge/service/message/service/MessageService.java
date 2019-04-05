@@ -135,7 +135,7 @@ public class MessageService {
   public void createOrUpdateNotifyProfile(String laShortCode, NotifyProfile newProfile) {
     Assert.notNull(laShortCode, "La required.");
     Assert.notNull(newProfile, "New profile required.");
-    
+
     if (null == referenceDataService.getLocalAuthority(laShortCode)) {
       String reason = laShortCode + " is not a recognised Local Authority short code.";
       throw new BadRequestException(new Error().message("Invalid.laShortCode").reason(reason));

@@ -37,9 +37,20 @@ public class ApiConfig {
             clientCredentialsResourceDetails, new TokenForwardingClientContext());
     HttpComponentsClientHttpRequestFactory requestFactory =
         new HttpComponentsClientHttpRequestFactory();
+
     result.setRequestFactory(requestFactory);
     result.setUriTemplateHandler(
         new DefaultUriBuilderFactory(referenceDataServiceConfiguration.getUrlPrefix()));
+    result
+        .getInterceptors()
+        .add(
+            (request, body, execution) -> {
+              request
+                  .getHeaders()
+                  .set("Accept", referenceDataServiceConfiguration.getVersionaccept());
+              return execution.execute(request, body);
+            });
+
     return result;
   }
 }
