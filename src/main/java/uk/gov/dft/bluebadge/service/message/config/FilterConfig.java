@@ -5,9 +5,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import uk.gov.dft.bluebadge.common.api.common.VersionAcceptFilter;
 import uk.gov.dft.bluebadge.common.esapi.EsapiFilter;
 import uk.gov.dft.bluebadge.common.logging.JwtMdcFilter;
-import uk.gov.dft.bluebadge.common.logging.VersionAcceptFilter;
 import uk.gov.dft.bluebadge.common.logging.VersionLoggingFilter;
 
 @Configuration

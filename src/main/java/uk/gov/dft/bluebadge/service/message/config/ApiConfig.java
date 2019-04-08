@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.client.token.grant.client.ClientCrede
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
+import uk.gov.dft.bluebadge.common.api.common.RestTemplateFactory;
 import uk.gov.dft.bluebadge.common.api.common.ServiceConfiguration;
 import uk.gov.dft.bluebadge.common.security.TokenForwardingClientContext;
 
@@ -26,31 +27,6 @@ public class ApiConfig {
   RestTemplate referenceDataServiceRestTemplate(
       ClientCredentialsResourceDetails clientCredentialsResourceDetails,
       ServiceConfiguration referenceDataServiceConfiguration) {
-    return buildRestTemplate(clientCredentialsResourceDetails, referenceDataServiceConfiguration);
-  }
-
-  private RestTemplate buildRestTemplate(
-      ClientCredentialsResourceDetails clientCredentialsResourceDetails,
-      ServiceConfiguration referenceDataServiceConfiguration) {
-    OAuth2RestTemplate result =
-        new OAuth2RestTemplate(
-            clientCredentialsResourceDetails, new TokenForwardingClientContext());
-    HttpComponentsClientHttpRequestFactory requestFactory =
-        new HttpComponentsClientHttpRequestFactory();
-
-    result.setRequestFactory(requestFactory);
-    result.setUriTemplateHandler(
-        new DefaultUriBuilderFactory(referenceDataServiceConfiguration.getUrlPrefix()));
-    result
-        .getInterceptors()
-        .add(
-            (request, body, execution) -> {
-              request
-                  .getHeaders()
-                  .set("Accept", referenceDataServiceConfiguration.getVersionaccept());
-              return execution.execute(request, body);
-            });
-
-    return result;
+    return RestTemplateFactory.getClientRestTemplate(clientCredentialsResourceDetails, referenceDataServiceConfiguration);
   }
 }
