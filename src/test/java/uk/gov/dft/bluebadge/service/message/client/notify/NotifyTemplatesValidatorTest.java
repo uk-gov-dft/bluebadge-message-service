@@ -22,7 +22,8 @@ public class NotifyTemplatesValidatorTest {
             TemplateName.NEW_USER.name(), "nu",
             TemplateName.RESET_PASSWORD.name(), "rp",
             TemplateName.PASSWORD_RESET_SUCCESS.name(), "prs",
-            TemplateName.APPLICATION_SUBMITTED.name(), "as");
+            TemplateName.APPLICATION_SUBMITTED.name(), "as",
+            TemplateName.SAVE_AND_RETURN.name(), "sr");
   }
 
   @Test
@@ -53,7 +54,8 @@ public class NotifyTemplatesValidatorTest {
         ImmutableMap.of(
             TemplateName.NEW_USER.name(), "nu",
             TemplateName.RESET_PASSWORD.name(), "rp",
-            TemplateName.PASSWORD_RESET_SUCCESS.name(), "prs");
+            TemplateName.PASSWORD_RESET_SUCCESS.name(), "prs",
+            TemplateName.SAVE_AND_RETURN.name(), "sr");
     NotifyTemplates notifyTemplates = new NotifyTemplates();
     notifyTemplates.setTemplates(templateMap);
 
