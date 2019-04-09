@@ -11,6 +11,7 @@ blue-badge:
       RESET_PASSWORD: 2ee75a54-8adc-41aa-ac06-5dfd724f48cb
       PASSWORD_RESET_SUCCESS: ea020bfb-cde8-4605-8726-248a38cc6bf2
       APPLICATION_SUBMITTED: e24af96c-1534-4c1e-81ad-74f2e7d9305a
+      SAVE_AND_RETURN: 46da8da9-7547-4c11-838c-3a54778656d0
   reference-data-service:
     service-host:
       host: localhost
