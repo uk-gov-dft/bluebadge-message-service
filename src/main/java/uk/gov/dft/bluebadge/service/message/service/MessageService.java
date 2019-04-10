@@ -1,17 +1,24 @@
 package uk.gov.dft.bluebadge.service.message.service;
 
+import static org.springframework.util.StringUtils.hasText;
+
+import com.google.common.collect.ImmutableMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import org.springframework.util.Assert;
 import uk.gov.dft.bluebadge.common.api.model.Error;
 import uk.gov.dft.bluebadge.common.service.exception.BadRequestException;
+import uk.gov.dft.bluebadge.common.service.exception.NotFoundException;
 import uk.gov.dft.bluebadge.model.message.generated.MessageDetails;
 import uk.gov.dft.bluebadge.service.message.client.notify.NotifyClient;
 import uk.gov.dft.bluebadge.service.message.client.notify.NotifyTemplates;
 import uk.gov.dft.bluebadge.service.message.repository.domain.MessageEntity;
+import uk.gov.dft.bluebadge.service.message.service.referencedata.ReferenceDataService;
 import uk.gov.service.notify.NotificationClientException;
 
 @Service
@@ -21,18 +28,23 @@ public class MessageService {
 
   private final NotifyClient client;
   private final NotifyTemplates dftNotifyTemplates;
-  private final SecretsManager secretsManager;
+  private final NotifySecretsManager secretsManager;
+  private final ReferenceDataService referenceDataService;
 
   @Autowired
   MessageService(
-      NotifyClient client, NotifyTemplates notifyTemplates, SecretsManager secretsManager) {
+      NotifyClient client,
+      NotifyTemplates notifyTemplates,
+      NotifySecretsManager secretsManager,
+      ReferenceDataService referenceDataService) {
     this.client = client;
     this.dftNotifyTemplates = notifyTemplates;
     this.secretsManager = secretsManager;
+    this.referenceDataService = referenceDataService;
   }
 
   public MessageEntity sendMessage(MessageDetails messageDetails) {
-    if (StringUtils.hasText(messageDetails.getLaShortCode())) {
+    if (hasText(messageDetails.getLaShortCode())) {
       try {
         return sendLAMessage(messageDetails);
       } catch (FailedLaMessageException e) {
@@ -46,8 +58,12 @@ public class MessageService {
   }
 
   private MessageEntity sendLAMessage(MessageDetails messageDetails) {
-    NotifyProfile laNotifyProfile =
-        secretsManager.retrieveLANotifyProfile(messageDetails.getLaShortCode());
+    NotifyProfile laNotifyProfile;
+    try {
+      laNotifyProfile = secretsManager.retrieveLANotifyProfile(messageDetails.getLaShortCode());
+    } catch (Exception e) {
+      throw new FailedLaMessageException("No Notify profile found");
+    }
 
     if (null == laNotifyProfile
         || null == laNotifyProfile.getTemplate(messageDetails.getTemplate())) {
@@ -114,5 +130,58 @@ public class MessageService {
     private FailedLaMessageException(String message) {
       super(message);
     }
+  }
+
+  public void createOrUpdateNotifyProfile(String laShortCode, NotifyProfile newProfile) {
+    Assert.notNull(laShortCode, "La required.");
+    Assert.notNull(newProfile, "New profile required.");
+
+    if (null == referenceDataService.getLocalAuthority(laShortCode)) {
+      String reason = laShortCode + " is not a recognised Local Authority short code.";
+      throw new BadRequestException(new Error().message("Invalid.laShortCode").reason(reason));
+    }
+
+    try {
+      NotifyProfile oldProfile = secretsManager.retrieveLANotifyProfile(laShortCode);
+      log.debug("Updating existing notify profile for {}.", laShortCode);
+      secretsManager.createOrUpdateNotifyProfile(
+          laShortCode, mergeNotifyProfiles(oldProfile, newProfile));
+    } catch (NotFoundException e) {
+      log.debug("Creating new notify profile for {}.", laShortCode);
+      secretsManager.createOrUpdateNotifyProfile(laShortCode, newProfile);
+    }
+  }
+
+  NotifyProfile mergeNotifyProfiles(NotifyProfile oldProfile, NotifyProfile newProfile) {
+    if (null == oldProfile) {
+      return newProfile;
+    }
+
+    if (null == newProfile) {
+      return oldProfile;
+    }
+
+    NotifyProfile.NotifyProfileBuilder builder = NotifyProfile.builder();
+    builder.apiKey(
+        hasText(newProfile.getApiKey()) ? newProfile.getApiKey() : oldProfile.getApiKey());
+
+    // A set of all templates either in AWS or in request.
+    Set<TemplateName> templateKeys = new HashSet<>();
+    if (newProfile.getTemplates() != null && !newProfile.getTemplates().isEmpty()) {
+      templateKeys.addAll(newProfile.getTemplates().keySet());
+    }
+    if (oldProfile.getTemplates() != null && !oldProfile.getTemplates().isEmpty()) {
+      templateKeys.addAll(oldProfile.getTemplates().keySet());
+    }
+
+    ImmutableMap.Builder<TemplateName, String> mapBuilder = ImmutableMap.builder();
+    for (TemplateName templateName : templateKeys) {
+      mapBuilder.put(
+          templateName,
+          hasText(newProfile.getTemplate(templateName))
+              ? newProfile.getTemplate(templateName)
+              : oldProfile.getTemplate(templateName));
+    }
+    return builder.templates(mapBuilder.build()).build();
   }
 }

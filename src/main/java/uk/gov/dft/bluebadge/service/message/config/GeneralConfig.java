@@ -37,5 +37,4 @@ public class GeneralConfig {
   LoggingAspect getControllerLoggingAspect() {
     return new LoggingAspect();
   }
-
 }
