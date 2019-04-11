@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.dft.bluebadge.common.api.common.CommonResponseHandler;
 import uk.gov.dft.bluebadge.model.message.generated.MessageDetails;
 import uk.gov.dft.bluebadge.model.message.generated.UuidResponse;
 import uk.gov.dft.bluebadge.model.message.generated.UuidResponseData;
@@ -21,6 +22,7 @@ import uk.gov.dft.bluebadge.service.message.service.NotifyProfile;
 @RestController
 @RequestMapping("messages")
 @Slf4j
+@CommonResponseHandler
 public class MessagesApiController {
 
   private MessageService service;

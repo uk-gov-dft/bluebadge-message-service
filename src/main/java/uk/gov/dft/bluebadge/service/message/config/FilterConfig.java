@@ -1,5 +1,6 @@
 package uk.gov.dft.bluebadge.service.message.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javax.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +33,7 @@ public class FilterConfig {
 
   @Bean
   public VersionAcceptFilter getVersionAcceptFilter(
-      @Value("${api.version}") @NotNull String apiVersion) {
-    return new VersionAcceptFilter(apiVersion);
+      @Value("${api.version}") @NotNull String apiVersion, ObjectMapper objectMapper) {
+    return new VersionAcceptFilter(apiVersion, objectMapper);
   }
 }
