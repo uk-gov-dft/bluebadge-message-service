@@ -12,7 +12,6 @@ import uk.gov.dft.bluebadge.common.logging.JwtMdcFilter;
 import uk.gov.dft.bluebadge.common.logging.VersionLoggingFilter;
 
 @Configuration
-@PropertySource(value = "classpath:version.properties")
 public class FilterConfig {
 
   @Bean
