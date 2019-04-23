@@ -17,7 +17,7 @@ node {
             env.SPRING_APPLICATION_JSON = '{"spring":{"datasource":{"url":"jdbc:postgresql://postgresql:5432/bb_dev?currentSchema=message"}}}'
         }
         try {
-            sh './gradlew --no-daemon --profile --configure-on-demand clean build bootJar createDatabaseSchemaZip artifactoryPublish artifactoryDeploy'
+            sh './gradlew --refresh-dependencies --no-daemon --profile --configure-on-demand clean build bootJar createDatabaseSchemaZip artifactoryPublish artifactoryDeploy'
             sh 'mv build/reports/profile/profile-*.html build/reports/profile/index.html'
             stash includes: 'build/**/*', name: 'build'
         }

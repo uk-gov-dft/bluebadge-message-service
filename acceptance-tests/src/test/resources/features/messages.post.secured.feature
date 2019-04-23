@@ -3,6 +3,7 @@ Feature: Verify message end points are secured
 
   Background:
     * url baseUrl
+    * header Accept = jsonVersionHeader
 
   Scenario: Denied when send a message without auth header
     Given path 'messages'

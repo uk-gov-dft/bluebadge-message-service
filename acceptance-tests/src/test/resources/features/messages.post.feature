@@ -5,6 +5,7 @@ Feature: Verify messages create
     * url baseUrl
     * def result = callonce read('./oauth2.feature')
     * header Authorization = 'Bearer ' + result.accessToken
+    * header Accept = jsonVersionHeader
 
   Scenario: Send a message
     Given path 'messages'

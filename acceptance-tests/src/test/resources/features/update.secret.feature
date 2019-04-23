@@ -9,6 +9,7 @@ Feature: Verify creating and updating gov pay secret
   Scenario: Update or create secret successfully with all values also dft user has access
     * def result = callonce read('./oauth2-dft-user.feature')
     * header Authorization = 'Bearer ' + result.accessToken
+    * header Accept = jsonVersionHeader
     Given path 'messages/localAuthorities/SHROP'
     And request { ***REMOVED*** templates: {"APPLICATION_SUBMITTED":"application submitted key", "NEW_USER":"new user secret", "RESET_PASSWORD":"reset  ***REMOVED***}}
     When method POST
@@ -24,6 +25,7 @@ Feature: Verify creating and updating gov pay secret
   Scenario: Update secret successfully with no values
     * def result = callonce read('./oauth2-dft-user.feature')
     * header Authorization = 'Bearer ' + result.accessToken
+    * header Accept = jsonVersionHeader
     Given path 'messages/localAuthorities/SHROP'
     And request {}
     When method POST
@@ -38,6 +40,7 @@ Feature: Verify creating and updating gov pay secret
   Scenario: Update secret successfully with apiKey only
     * def result = callonce read('./oauth2-dft-user.feature')
     * header Authorization = 'Bearer ' + result.accessToken
+    * header Accept = jsonVersionHeader
     Given path 'messages/localAuthorities/SHROP'
     And request { ***REMOVED***
     When method POST
@@ -52,6 +55,7 @@ Feature: Verify creating and updating gov pay secret
   Scenario: Update secret successfully with single template only
     * def result = callonce read('./oauth2-dft-user.feature')
     * header Authorization = 'Bearer ' + result.accessToken
+    * header Accept = jsonVersionHeader
     Given path 'messages/localAuthorities/SHROP'
     And request {templates: {"APPLICATION_SUBMITTED":"application submitted new key"}}
     When method POST
@@ -66,6 +70,7 @@ Feature: Verify creating and updating gov pay secret
   Scenario: Update secret successfully la admin
     * def result = callonce read('./oauth2-dft-user.feature')
     * header Authorization = 'Bearer ' + result.accessToken
+    * header Accept = jsonVersionHeader
     Given path 'messages/localAuthorities/SHROP'
     And request {templates: {"APPLICATION_SUBMITTED":"la admin"}}
     When method POST
@@ -80,6 +85,7 @@ Feature: Verify creating and updating gov pay secret
   Scenario: Incorrect privs citizen app
     * def result = callonce read('./oauth2-citizen-app.feature')
     * header Authorization = 'Bearer ' + result.accessToken
+    * header Accept = jsonVersionHeader
     Given path 'messages/localAuthorities/SHROP'
     And request {templates: {"APPLICATION_SUBMITTED":"la admin"}}
     When method POST
@@ -89,6 +95,7 @@ Feature: Verify creating and updating gov pay secret
     * def result = callonce read('./oauth2-shrop-la-editor.feature')
     * header Authorization = 'Bearer ' + result.accessToken
     Given path 'messages/localAuthorities/SHROP'
+    * header Accept = jsonVersionHeader
     And request {templates: {"APPLICATION_SUBMITTED":"la admin"}}
     When method POST
     Then status 403
@@ -96,6 +103,7 @@ Feature: Verify creating and updating gov pay secret
   Scenario: Incorrect privs wrong la
     * def result = callonce read('./oauth2-shrop-la-admin.feature')
     * header Authorization = 'Bearer ' + result.accessToken
+    * header Accept = jsonVersionHeader
     Given path 'messages/localAuthorities/ABERD'
     And request {templates: {"APPLICATION_SUBMITTED":"la admin"}}
     When method POST
@@ -104,6 +112,7 @@ Feature: Verify creating and updating gov pay secret
   Scenario: Invalid LA
     * def result = callonce read('./oauth2-dft-user.feature')
     * header Authorization = 'Bearer ' + result.accessToken
+    * header Accept = jsonVersionHeader
     Given path 'messages/localAuthorities/BOBBY_LAD'
     And request {templates: {"APPLICATION_SUBMITTED":"la admin"}}
     When method POST
@@ -113,6 +122,7 @@ Feature: Verify creating and updating gov pay secret
   Scenario: Invalid Template name
     * def result = callonce read('./oauth2-shrop-la-admin.feature')
     * header Authorization = 'Bearer ' + result.accessToken
+    * header Accept = jsonVersionHeader
     Given path 'messages/localAuthorities/SHROP'
     And request {templates: {"APPLICATION_SCHMACLICATION":"la admin"}}
     When method POST
