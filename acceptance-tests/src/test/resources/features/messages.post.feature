@@ -27,3 +27,10 @@ Feature: Verify messages create
     When method POST
     Then status 400
     And match $.error.errors contains {"field":"emailAddress","reason":"must not be null","message":"NotNull.messageDetails.emailAddress","location":null,"locationType":null}
+
+  Scenario: Send application saved
+    Given path 'messages'
+    And request {template: "APPLICATION_SAVED", emailAddress:"a@b.com", attributes:{expiryTime:"1:35pm",returnLink:"http://localhost:8780/someReturnUrl"}}
+    When method POST
+    Then status 200
+    And match $.data contains {uuid:"#notnull"}
