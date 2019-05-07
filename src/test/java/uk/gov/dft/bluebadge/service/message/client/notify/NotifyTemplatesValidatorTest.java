@@ -18,12 +18,14 @@ public class NotifyTemplatesValidatorTest {
   @Before
   public void setup() {
     templateMap =
-        ImmutableMap.of(
-            TemplateName.NEW_USER.name(), "nu",
-            TemplateName.RESET_PASSWORD.name(), "rp",
-            TemplateName.PASSWORD_RESET_SUCCESS.name(), "prs",
-            TemplateName.APPLICATION_SUBMITTED.name(), "as",
-            TemplateName.SAVE_AND_RETURN.name(), "sr");
+        ImmutableMap.<String, String>builder()
+            .put(TemplateName.NEW_USER.name(), "nu")
+            .put(TemplateName.RESET_PASSWORD.name(), "rp")
+            .put(TemplateName.PASSWORD_RESET_SUCCESS.name(), "prs")
+            .put(TemplateName.APPLICATION_SUBMITTED.name(), "as")
+            .put(TemplateName.SAVE_AND_RETURN.name(), "sr")
+            .put(TemplateName.APPLICATION_SAVED.name(), "as")
+            .build();
   }
 
   @Test
@@ -55,7 +57,8 @@ public class NotifyTemplatesValidatorTest {
             TemplateName.NEW_USER.name(), "nu",
             TemplateName.RESET_PASSWORD.name(), "rp",
             TemplateName.PASSWORD_RESET_SUCCESS.name(), "prs",
-            TemplateName.SAVE_AND_RETURN.name(), "sr");
+            TemplateName.SAVE_AND_RETURN.name(), "sr",
+            TemplateName.APPLICATION_SAVED.name(), "as");
     NotifyTemplates notifyTemplates = new NotifyTemplates();
     notifyTemplates.setTemplates(templateMap);
 
