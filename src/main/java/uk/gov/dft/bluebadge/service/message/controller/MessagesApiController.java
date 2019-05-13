@@ -39,7 +39,7 @@ public class MessagesApiController {
           @RequestBody
           @Valid
           MessageDetails messageDetails) {
-    log.info("Sending message. Details:{}", messageDetails);
+    log.info("Sending message. Type:{}, LA:{}", messageDetails.getTemplate(), messageDetails.getLaShortCode());
     MessageEntity messageEntity = service.sendMessage(messageDetails);
     UuidResponse response = new UuidResponse();
     UuidResponseData data = new UuidResponseData();
