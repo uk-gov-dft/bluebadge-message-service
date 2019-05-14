@@ -4,6 +4,12 @@ blue-badge:
   notify: 
     secretEnv: ${bb_env}  
      ***REMOVED***
+  reference-data-service:
+    service-host:
+      host: api-internal.${bb_env}.${url}
+      port: 443
+      scheme: https
+      contextpath: /
 
 management:
   server:
