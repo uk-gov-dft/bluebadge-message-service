@@ -1,6 +1,6 @@
 blue-badge:
   auth-server:
-    url: https://api.${bb_env}.${url}/bb_auth
+    url: https://api-internal.${bb_env}.${url}/bb_auth
   notify: 
     secretEnv: ${bb_env}  
      ***REMOVED***
